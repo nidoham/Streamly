@@ -5,3 +5,5 @@
 /build
 /captures
 .DS_Store
+*.apk
+*.aab
