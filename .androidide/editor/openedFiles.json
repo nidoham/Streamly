@@ -1,35 +1,20 @@
 {
   "allFiles": [
     {
-      "file": "/storage/emulated/0/AndroidIDEProjects/Streamly/.github/workflows/android_ci.yml",
+      "file": "/storage/emulated/0/AndroidIDEProjects/Streamly/app/src/main/res/layout/activity_main.xml",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 0,
-          "line": 0
+          "column": 44,
+          "index": 7693,
+          "line": 154
         },
         "start": {
-          "column": 0,
-          "index": 0,
-          "line": 0
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/Streamly/app/build.gradle",
-      "selection": {
-        "end": {
-          "column": 56,
-          "index": 2423,
-          "line": 65
-        },
-        "start": {
-          "column": 56,
-          "index": 2423,
-          "line": 65
+          "column": 44,
+          "index": 7693,
+          "line": 154
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/Streamly/app/build.gradle"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/Streamly/app/src/main/res/layout/activity_main.xml"
 }

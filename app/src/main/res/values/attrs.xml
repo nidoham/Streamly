@@ -1,0 +1,6 @@
+<resources>
+    <attr name="colorInverseSurface" format="color" />
+    <attr name="colorOnInverseSurface" format="color" />
+    <attr name="scrimColor" format="color" />
+    <attr name="shadowColor" format="color" />
+</resources>

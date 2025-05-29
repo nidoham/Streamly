@@ -1,5 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ================ App Information ================ -->
     <string name="app_name">Streamly</string>
-
+    
+    <!-- ================ Navigation Drawer ================ -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_drawer_open">Open Navigation Drawer</string>
+    <string name="nav_drawer_close">Close Navigation Drawer</string>
+    
+    <!-- Navigation Categories -->
+    <string name="nav_title_creation">Creation</string>
+    <string name="nav_title_assistant">Assistant</string>
+    <string name="nav_title_games">Games Zone</string>
+    
+    <!-- Menu Items -->
+    <string name="menu_settings">App Settings</string>
+    <string name="menu_help">Help Center</string>
+    <string name="menu_share">Share App</string>
+    <string name="menu_about">About Us</string>
+    <string name="menu_logout">Sign Out</string>
+    
+    <!-- Navigation Header -->
+    <string name="nav_header_title">Ruposhi User</string>
+    <string name="nav_header_subtitle">user@ruposhi.com</string>
+    <string name="nav_header_desc">Navigation Header</string>
+    
+    <!-- Navigation Controls -->
+    <string name="nav_back">Back</string>
+    <string name="nav_back_button">Return</string>
+    
+    <!-- ================ UI Labels ================ -->
+    <string name="ui_features_label">Features</string>
+    <string name="ui_settings_label">Settings</string>
+    <string name="ui_about_label">About</string>
+    <string name="ui_close">Close</string>
+    <string name="ui_welcome_message">Welcome to Ruposhi AI Assistant</string>
+    <string name="ui_more_tokens">Get More Tokens</string>
+    <string name="ui_loading">Loading content...</string>
+    <string name="ui_no_data">No content available</string>
+    <string name="ui_confirm_logout">Are you sure you want to sign out?</string>
+    <string name="ui_yes">Yes</string>
+    <string name="ui_no">No</string>
+    
+    <!-- ================ Error Handling ================ -->
+    <string name="firebase_not_initialized">Firebase is not initialized</string>
+    
+    <string name="error_title">Application Error</string>
+    <string name="error_subtitle">An unexpected error has occurred. Please help us improve by reporting this issue.</string>
+    <string name="error_report_button">Report Issue</string>
+    <string name="error_unknown">An unexpected error occurred. Please try again.</string>
+    <string name="error_no_report">No error information available to report.</string>
+    <string name="unknown_error">An unexpected error occurred. Please restart the app.</string>
+    <string name="no_error_to_report">No error information available to report.</string>
+    
+    <!-- ================ Debug Activity ================ -->
+    <string name="debug_title">Application Error</string>
+    <string name="debug_subtitle">Sorry, the application encountered an unexpected error.</string>
+    <string name="debug_error_details_label">Error Details:</string>
+    <string name="debug_submit_report">Submit Report</string>
+    <string name="debug_close_app">Close App</string>
+    <string name="debug_thank_you">Thank you for helping us improve the app.</string>
+    <string name="debug_report_submitted">Report submitted successfully</string>
+    <string name="debug_report_failed">Failed to submit report</string>
+    <string name="debug_report_creation_failed">Could not create crash report</string>
+    
+    <!-- Debug UI Elements -->
+    <string name="error_details_label">Error details:</string>
+    <string name="submit_report">Submit Feedback</string>
+    <string name="close_app">Exit Application</string>
+    <string name="thank_you_message">Thank you for helping us improve the app.</string>
+    <string name="report">Report Issue</string>
+    <string name="error_copied">Error Copied</string>
+    <string name="close">Close</string>
+    <string name="report_submitted">Report submitted successfully</string>
+    <string name="report_submission_failed">Failed to submit report</string>
+    <string name="report_creation_failed">Could not create crash report</string>
+    
+    <!-- Strings for improved sign-in layout -->
+    <string name="app_tagline">Your AI Influencer</string>
+    <string name="background_image_description">Background image</string>
+    <string name="app_logo_description">App logo</string>
+    
+    <string name="welcome_text">Welcome to KR Thrisal</string>
+    <string name="signin_subtitle">Sign in to continue to your AI experience</string>
+    
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="email">Email</string>
+    <string name="mobile">Mobile</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter_x">X</string>
+    <string name="continue_as_guest">Continue as Guest</string>
+    
+    <string name="terms_and_privacy">By continuing, you agree to our Terms of Service and Privacy Policy</string>
+    
+    <!-- Chat message related strings -->
+    <string name="image_content_description">Image message content</string>
+    <string name="avatar_description">User avatar</string>
+    <string name="play_voice_message">Play voice message</string>
+    <string name="pause_voice_message">Pause voice message</string>
+    
+    <!-- Status messages -->
+    <string name="uploading">Uploading…</string>
+    <string name="downloading">Downloading…</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="translation_in_progress">Translation in progress…</string>
 </resources>

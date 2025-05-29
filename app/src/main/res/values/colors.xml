@@ -1,2 +1,177 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <!-- Material Design 3 Light Theme Colors (Android 12+) -->
+    <color name="md_theme_primary">#6750A4</color>
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="md_theme_primaryContainer">#EADDFF</color>
+    <color name="md_theme_onPrimaryContainer">#21005D</color>
+    <color name="md_theme_secondary">#625B71</color>
+    <color name="md_theme_onSecondary">#FFFFFF</color>
+    <color name="md_theme_secondaryContainer">#E8DEF8</color>
+    <color name="md_theme_onSecondaryContainer">#1D192B</color>
+    <color name="md_theme_tertiary">#7D5260</color>
+    <color name="md_theme_onTertiary">#FFFFFF</color>
+    <color name="md_theme_tertiaryContainer">#FFD8E4</color>
+    <color name="md_theme_onTertiaryContainer">#31111D</color>
+    <color name="md_theme_error">#B3261E</color>
+    <color name="md_theme_onError">#FFFFFF</color>
+    <color name="md_theme_errorContainer">#F9DEDC</color>
+    <color name="md_theme_onErrorContainer">#410E0B</color>
+    <color name="md_theme_background">#FFFFFF</color>
+    <color name="md_theme_onBackground">#1C1B1F</color>
+    <color name="md_theme_surface">#FFFFFF</color>
+    <color name="md_theme_onSurface">#1C1B1F</color>
+    <color name="md_theme_surfaceVariant">#E7E0EC</color>
+    <color name="md_theme_onSurfaceVariant">#49454F</color>
+    <color name="md_theme_outline">#79747E</color>
+    <color name="md_theme_outlineVariant">#CAC4D0</color>
+    <color name="md_theme_inverseSurface">#313033</color>
+    <color name="md_theme_inverseOnSurface">#F4EFF4</color>
+    <color name="md_theme_inversePrimary">#D0BCFF</color>
+    <color name="md_theme_scrim">#000000</color>
+    <color name="md_theme_surfaceDim">#DAD8DD</color>
+    <color name="md_theme_surfaceBright">#FFFFFF</color>
+    <color name="md_theme_surfaceContainerLowest">#FFFFFF</color>
+    <color name="md_theme_surfaceContainerLow">#F4EFF4</color>
+    <color name="md_theme_surfaceContainer">#EEE8EE</color>
+    <color name="md_theme_surfaceContainerHigh">#E8E2E9</color>
+    <color name="md_theme_surfaceContainerHighest">#E3DDE4</color>
+
+    <!-- Medium Contrast Colors (Material 3) -->
+    <color name="md_theme_primary_mediumContrast">#9A82DB</color>
+    <color name="md_theme_onPrimary_mediumContrast">#FFFFFF</color>
+    <color name="md_theme_primaryContainer_mediumContrast">#4F378B</color>
+    <color name="md_theme_onPrimaryContainer_mediumContrast">#FFFFFF</color>
+    <color name="md_theme_secondary_mediumContrast">#958DA9</color>
+    <color name="md_theme_onSecondary_mediumContrast">#FFFFFF</color>
+    <color name="md_theme_secondaryContainer_mediumContrast">#4A4458</color>
+    <color name="md_theme_onSecondaryContainer_mediumContrast">#FFFFFF</color>
+    <color name="md_theme_tertiary_mediumContrast">#C18F9F</color>
+    <color name="md_theme_onTertiary_mediumContrast">#FFFFFF</color>
+    <color name="md_theme_tertiaryContainer_mediumContrast">#633B48</color>
+    <color name="md_theme_onTertiaryContainer_mediumContrast">#FFFFFF</color>
+    <color name="md_theme_error_mediumContrast">#F2B8B5</color>
+    <color name="md_theme_onError_mediumContrast">#FFFFFF</color>
+    <color name="md_theme_errorContainer_mediumContrast">#8C1D18</color>
+    <color name="md_theme_onErrorContainer_mediumContrast">#FFFFFF</color>
+    <color name="md_theme_background_mediumContrast">#1C1B1F</color>
+    <color name="md_theme_onBackground_mediumContrast">#E6E1E5</color>
+    <color name="md_theme_surface_mediumContrast">#1C1B1F</color>
+    <color name="md_theme_onSurface_mediumContrast">#FFFFFF</color>
+    <color name="md_theme_surfaceVariant_mediumContrast">#49454F</color>
+    <color name="md_theme_onSurfaceVariant_mediumContrast">#FFFFFF</color>
+    <color name="md_theme_outline_mediumContrast">#B0AAB9</color>
+    <color name="md_theme_outlineVariant_mediumContrast">#938F99</color>
+    <color name="md_theme_inverseSurface_mediumContrast">#E6E1E5</color>
+    <color name="md_theme_inverseOnSurface_mediumContrast">#313033</color>
+    <color name="md_theme_inversePrimary_mediumContrast">#6750A4</color>
+    <color name="md_theme_scrim_mediumContrast">#000000</color>
+
+    <!-- High Contrast Colors (Material 3) -->
+    <color name="md_theme_primary_highContrast">#D0BCFF</color>
+    <color name="md_theme_onPrimary_highContrast">#000000</color>
+    <color name="md_theme_primaryContainer_highContrast">#9A82DB</color>
+    <color name="md_theme_onPrimaryContainer_highContrast">#000000</color>
+    <color name="md_theme_secondary_highContrast">#CCC2DC</color>
+    <color name="md_theme_onSecondary_highContrast">#000000</color>
+    <color name="md_theme_secondaryContainer_highContrast">#958DA9</color>
+    <color name="md_theme_onSecondaryContainer_highContrast">#000000</color>
+    <color name="md_theme_tertiary_highContrast">#EFB8C8</color>
+    <color name="md_theme_onTertiary_highContrast">#000000</color>
+    <color name="md_theme_tertiaryContainer_highContrast">#C18F9F</color>
+    <color name="md_theme_onTertiaryContainer_highContrast">#000000</color>
+    <color name="md_theme_error_highContrast">#FFB4AB</color>
+    <color name="md_theme_onError_highContrast">#000000</color>
+    <color name="md_theme_errorContainer_highContrast">#F2B8B5</color>
+    <color name="md_theme_onErrorContainer_highContrast">#000000</color>
+    <color name="md_theme_background_highContrast">#1C1B1F</color>
+    <color name="md_theme_onBackground_highContrast">#FFFFFF</color>
+    <color name="md_theme_surface_highContrast">#1C1B1F</color>
+    <color name="md_theme_onSurface_highContrast">#FFFFFF</color>
+    <color name="md_theme_surfaceVariant_highContrast">#49454F</color>
+    <color name="md_theme_onSurfaceVariant_highContrast">#FFFFFF</color>
+    <color name="md_theme_outline_highContrast">#CAC4D0</color>
+    <color name="md_theme_outlineVariant_highContrast">#B0AAB9</color>
+    <color name="md_theme_inverseSurface_highContrast">#E6E1E5</color>
+    <color name="md_theme_inverseOnSurface_highContrast">#1C1B1F</color>
+    <color name="md_theme_inversePrimary_highContrast">#381E72</color>
+    <color name="md_theme_scrim_highContrast">#000000</color>
+
+    <!-- Common Colors -->
+    <color name="icon_color">#CAC4D0</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Material Design 3 Dynamic Colors (Android 12+ Fallbacks) -->
+    <color name="material_dynamic_primary90">#D0BCFF</color>
+    <color name="material_dynamic_primary20">#381E72</color>
+    <color name="material_dynamic_secondary90">#CCC2DC</color>
+    <color name="material_dynamic_secondary20">#332D41</color>
+    <color name="material_dynamic_tertiary90">#EFB8C8</color>
+    <color name="material_dynamic_tertiary20">#492532</color>
+    <color name="material_dynamic_neutral90">#E6E1E5</color>
+    <color name="material_dynamic_neutral20">#313033</color>
+
+    <!-- Custom Colors -->
+    <color name="bottom_nav_background">#E3F2FD</color>
+    <color name="whatsapp_bubble_background">#F5F6F5</color>
+    
+    <!-- Colors for Material Design 3 theme -->
+    <color name="primary">#6750A4</color>
+    <color name="primary_container">#EADDFF</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_primary_container">#21005E</color>
+    
+    <color name="secondary">#625B71</color>
+    <color name="secondary_container">#E8DEF8</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="on_secondary_container">#1E192B</color>
+    
+    <color name="tertiary">#7E5260</color>
+    <color name="tertiary_container">#FFD9E3</color>
+    <color name="on_tertiary">#FFFFFF</color>
+    <color name="on_tertiary_container">#31101D</color>
+    
+    <color name="surface">#FEF7FF</color>
+    <color name="surface_container">#F3EDF7</color>
+    <color name="surface_variant">#E7E0EC</color>
+    <color name="on_surface">#1C1B1F</color>
+    <color name="on_surface_variant">#49454E</color>
+    
+    <!-- Social media colors -->
+    <color name="facebook_blue">#1877F2</color>
+    <color name="twitter_blue">#1DA1F2</color>
+    
+    
+    <!-- Base application colors -->
+    <color name="colorPrimary">#5E35B1</color>
+    <color name="colorPrimaryDark">#4527A0</color>
+    <color name="colorPrimaryLight">#B39DDB</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorDanger">#F44336</color>
+    <color name="colorDangerLight">#FFCDD2</color>
+    <color name="colorSuccess">#4CAF50</color>
+    <color name="colorWarning">#FFC107</color>
+    
+    <!-- Light theme colors -->
+    <color name="lightBackground">#FFFFFF</color>
+    <color name="lightItemBackground">@android:color/transparent</color>
+    <color name="lightSentMessageBackground">#E3F2FD</color>
+    <color name="lightReceivedMessageBackground">#FFFFFF</color>
+    <color name="lightReactionBackground">#F0F0F0</color>
+    <color name="lightText">#212121</color>
+    <color name="lightSecondaryText">#757575</color>
+    <color name="lightIcon">#616161</color>
+    <color name="lightDivider">#BDBDBD</color>
+    
+    <!-- Dark theme colors -->
+    <color name="darkBackground">#121212</color>
+    <color name="darkItemBackground">#1E1E1E</color>
+    <color name="darkSentMessageBackground">#1A237E</color>
+    <color name="darkReceivedMessageBackground">#2D2D2D</color>
+    <color name="darkReactionBackground">#3D3D3D</color>
+    <color name="darkText">#FFFFFF</color>
+    <color name="darkSecondaryText">#B0B0B0</color>
+    <color name="darkIcon">#AEAEAE</color>
+    <color name="darkDivider">#454545</color>
+
+</resources>

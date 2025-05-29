@@ -254,6 +254,9 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:${exoPlayerVersion}"
     implementation "com.google.android.exoplayer:exoplayer-ui:${exoPlayerVersion}"
     implementation "com.google.android.exoplayer:extension-mediasession:${exoPlayerVersion}"
+    
+    // ImageView and image loading
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     // Metadata generator for service descriptors
     compileOnly "com.google.auto.service:auto-service-annotations:${googleAutoServiceVersion}"
