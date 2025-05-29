@@ -21,3 +21,11 @@
 #-renamesourcefileattribute SourceFile
 -keep class javax.script.** { *; }
 -keep class org.mozilla.javascript.** { *; }
+
+# Keep rules for Rhino and scripting
+-keep class javax.script.** { *; }
+-keep class org.mozilla.javascript.** { *; }
+-keep class jdk.nashorn.** { *; }
+-keep class jdk.dynalink.** { *; }
+-keep class jdk.internal.** { *; }
+-keep class java.beans.** { *; }
