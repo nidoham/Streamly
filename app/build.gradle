@@ -52,10 +52,10 @@ android {
             if (normalizedWorkingBranch.isEmpty() || workingBranch == "master" || workingBranch == "dev") {
                 // default values when branch name could not be determined or is master or dev
                 applicationIdSuffix ".debug"
-                resValue "string", "app_name", "Streamly Debug"
+                resValue "string", "app_name", "Streamly"
             } else {
                 applicationIdSuffix ".debug." + normalizedWorkingBranch
-                resValue "string", "app_name", "Streamly " + workingBranch
+                resValue "string", "app_name", "Streamly"
                 archivesBaseName = 'Streamly_' + normalizedWorkingBranch
             }
         }
@@ -63,7 +63,7 @@ android {
         release {
             if (System.properties.containsKey('packageSuffix')) {
                 applicationIdSuffix System.getProperty('packageSuffix')
-                resValue "string", "app_name", "Streamly " + System.getProperty('packageSuffix')
+                resValue "string", "app_name", "Streamly"
                 archivesBaseName = 'Streamly_' + System.getProperty('packageSuffix')
             }
             minifyEnabled true
