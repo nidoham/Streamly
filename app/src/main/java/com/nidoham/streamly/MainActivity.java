@@ -14,6 +14,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.nidoham.streamly.databinding.ActivityMainBinding;
 import com.nidoham.streamly.fragments.adapters.BottomNavigationFragmentsAdapter;
+import com.nidoham.streamly.fragments.ui.HomeFragment;
+import com.nidoham.streamly.fragments.ui.ReelFragment;
+import com.nidoham.streamly.fragments.ui.SubscriptionsFragment;
+import com.nidoham.streamly.fragments.ui.DownloadFragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
