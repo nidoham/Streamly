@@ -8,9 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.nidoham.streamly.databinding.ActivityMainBinding;
+import com.nidoham.streamly.fragments.adapters.BottomNavigationFragmentsAdapter;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
@@ -18,12 +21,29 @@ public class MainActivity extends AppCompatActivity
 
     private ActivityMainBinding binding;
     private DrawerLayout drawerLayout;
+    private ViewPager2 viewPager;
+    private BottomNavigationFragmentsAdapter adapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Initialize ViewPager2
+        viewPager = binding.mainContent;
+        // Create fragments in EXACT menu order
+        final Fragment[] fragments = {
+            new HomeFragment(),          // Position 0 - nav_home
+            new ReelFragment(),          // Position 1 - nav_reel
+            new SubscriptionsFragment(), // Position 2 - nav_subscriptions
+            new DownloadFragment()       // Position 3 - nav_download
+        };
+        // Setup adapter
+        adapter = new BottomNavigationFragmentsAdapter(this, fragments);
+        viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(adapter.getItemCount()); // Keep all fragments in memory
+        viewPager.setUserInputEnabled(false); // Disable swiping between fragments
 
         setupToolbar();
         setupDrawerNavigation();
@@ -93,19 +113,40 @@ public class MainActivity extends AppCompatActivity
                 final int itemId = item.getItemId();
 
                 if (itemId == R.id.nav_home) {
-                    handleHomeSelection();
+                    viewPager.setCurrentItem(0, true);
                     return true;
                 } else if (itemId == R.id.nav_reel) {
-                    handleReelSelection();
+                    viewPager.setCurrentItem(1, true);
                     return true;
                 } else if (itemId == R.id.nav_subscriptions) {
-                    handleSubscriptionsSelection();
+                    viewPager.setCurrentItem(2, true);
                     return true;
                 } else if (itemId == R.id.nav_download) {
-                    handleDownloadsSelection();
+                    viewPager.setCurrentItem(3, true);
                     return true;
                 }
                 return false;
+            });
+            // Sync ViewPager position changes with BottomNavigation
+            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(final int position) {
+                    super.onPageSelected(position);
+                    switch (position) {
+                        case 0:
+                            bottomNav.setSelectedItemId(R.id.nav_home);
+                            break;
+                        case 1:
+                            bottomNav.setSelectedItemId(R.id.nav_reel);
+                            break;
+                        case 2:
+                            bottomNav.setSelectedItemId(R.id.nav_subscriptions);
+                            break;
+                        case 3:
+                            bottomNav.setSelectedItemId(R.id.nav_download);
+                            break;
+                    }
+                }
             });
         }
     }
@@ -114,23 +155,7 @@ public class MainActivity extends AppCompatActivity
         if (binding.bottomNav != null) {
             binding.bottomNav.setSelectedItemId(R.id.nav_home);
         }
-        handleHomeSelection();
-    }
-
-    private void handleHomeSelection() {
-        // TODO: Implement home functionality
-    }
-
-    private void handleReelSelection() {
-        // TODO: Implement reel functionality
-    }
-
-    private void handleSubscriptionsSelection() {
-        // TODO: Implement subscriptions functionality
-    }
-
-    private void handleDownloadsSelection() {
-        // TODO: Implement downloads functionality
+        viewPager.setCurrentItem(0);
     }
 
     @Override
@@ -138,29 +163,19 @@ public class MainActivity extends AppCompatActivity
         final int itemId = item.getItemId();
 
         if (itemId == R.id.nav_home) {
-            handleHomeSelection();
-            updateBottomNavSelection(R.id.nav_home);
+            viewPager.setCurrentItem(0, true);
         } else if (itemId == R.id.nav_reel) {
-            handleReelSelection();
-            updateBottomNavSelection(R.id.nav_reel);
+            viewPager.setCurrentItem(1, true);
         } else if (itemId == R.id.nav_subscriptions) {
-            handleSubscriptionsSelection();
-            updateBottomNavSelection(R.id.nav_subscriptions);
+            viewPager.setCurrentItem(2, true);
         } else if (itemId == R.id.nav_download) {
-            handleDownloadsSelection();
-            updateBottomNavSelection(R.id.nav_download);
+            viewPager.setCurrentItem(3, true);
         }
 
         if (drawerLayout != null) {
             drawerLayout.closeDrawer(GravityCompat.START);
         }
         return true;
-    }
-
-    private void updateBottomNavSelection(final int itemId) {
-        if (binding.bottomNav != null) {
-            binding.bottomNav.setSelectedItemId(itemId);
-        }
     }
 
     @Override

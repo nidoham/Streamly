@@ -20,7 +20,7 @@ jobs:
         distribution: 'temurin'
         cache: gradle
         
-    - name: Set up Gradle
+    - name: Set up Gradle 8.1.1
       uses: gradle/actions/setup-gradle@v3
       with:
         gradle-version: '8.1.1'
@@ -31,40 +31,24 @@ jobs:
     - name: Run unit tests
       run: ./gradlew testDebugUnitTest
       
-    - name: Build Debug & Release APKs
-      run: ./gradlew assembleDebug assembleRelease
+    - name: Build debug APK
+      run: ./gradlew assembleDebug
       
-    - name: Prepare artifacts directory
-      run: mkdir -p artifacts/apks
+    - name: List build outputs (for debugging)
+      run: find app/build/outputs -name "*.apk" -type f
       
-    - name: Collect APKs
-      run: |
-        find app/build/outputs/apk -name "*.apk" -exec cp {} artifacts/apks/ \;
-        
-    - name: Create APK bundle ZIP
-      run: |
-        cd artifacts/apks
-        zip -r ../apk-bundle.zip .
-        cd $GITHUB_WORKSPACE
-        
-    - name: Upload artifacts
+    - name: Upload debug APK
       uses: actions/upload-artifact@v4
       with:
-        name: android-build-artifacts
-        path: |
-          artifacts/apk-bundle.zip
-          artifacts/apks/*
+        name: debug-apk
+        path: app/build/outputs/apk/debug/*.apk
         retention-days: 30
         
     - name: Create release summary
       run: |
-        echo "## 🚀 Android Build Summary" >> $GITHUB_STEP_SUMMARY
-        echo "### 📦 Generated Artifacts" >> $GITHUB_STEP_SUMMARY
-        echo "- **Debug APK**" >> $GITHUB_STEP_SUMMARY
-        echo "- **Release APK**" >> $GITHUB_STEP_SUMMARY
-        echo "- **APK Bundle ZIP**" >> $GITHUB_STEP_SUMMARY
+        echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Build completed successfully" >> $GITHUB_STEP_SUMMARY
+        echo "📱 Debug APK has been uploaded as an artifact" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### ⬇️ Download Instructions" >> $GITHUB_STEP_SUMMARY
-        echo "1. Go to Actions artifacts section" >> $GITHUB_STEP_SUMMARY
-        echo "2. Download \`android-build-artifacts\`" >> $GITHUB_STEP_SUMMARY
-        echo "3. Contains both APKs and bundle ZIP" >> $GITHUB_STEP_SUMMARY
+        echo "### Download APK" >> $GITHUB_STEP_SUMMARY
+        echo "The debug APK can be downloaded from the Actions artifacts section above." >> $GITHUB_STEP_SUMMARY
