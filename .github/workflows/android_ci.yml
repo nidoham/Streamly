@@ -1,194 +1,70 @@
-name: 🤖 Optimized Android CI/CD
-
-on: [push, pull_request, workflow_dispatch, schedule] # Events remain unchanged
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-env:
-  GRADLE_OPTS: >-
-    -Dorg.gradle.daemon=false
-    -Dorg.gradle.parallel=true
-    -Dorg.gradle.configureondemand=true
-    -Dorg.gradle.caching=true
-    -Dorg.gradle.workers.max=${{ (runner.os == 'macOS') && '2' || '4' }}
-    -Dkotlin.compiler.execution.strategy=in-process
-    -Xmx6g
-    -XX:MaxMetaspaceSize=1g
-  # Remaining env vars unchanged
-
-permissions: # Unchanged
+name: Android CI
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  setup:
-    name: 🔍 Setup & Validation
+  build:
     runs-on: ubuntu-latest
-    outputs:
-      # Added build_required output
-      build_required: ${{ steps.changes.outputs.android == 'true' }}
-      # Existing outputs remain...
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Full history for change detection
-
-      - name: Restore Gradle cache
-        uses: actions/cache@v4
-        id: gradle-cache
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
-
-      # Existing validation steps...
-
-      - name: Check for changes
-        id: changes
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            android:
-              - 'app/**'
-              - 'build.gradle*'
-              - 'gradle/**'
-            tests:
-              - 'app/src/test/**'
-              - 'app/src/androidTest/**'
-
-  build-and-test:
-    name: 🔨 Build & Test
-    needs: setup
-    if: needs.setup.outputs.build_required == 'true' && needs.setup.outputs.should_run_tests == 'true'
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        variant: ${{ fromJson(needs.setup.outputs.build_variants) }}
-        include:
-          - variant: debug
-            test_task: testDebugUnitTest
-          - variant: release
-            test_task: testReleaseUnitTest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Restore Gradle cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ steps.gradle-cache.outputs.cache-primary-key }}
-          restore-keys: ${{ steps.gradle-cache.outputs.restore-keys }}
-
-      - name: Setup JDK
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: temurin
-          cache: gradle
-
-      # Existing Android setup...
-
-      - name: Build and test
-        run: |
-          ./gradlew :app:assemble${{ matrix.variant }} :app:${{ matrix.test_task }} \
-            --build-cache \
-            --configuration-cache \
-            --parallel \
-            --scan
-
-      # Remaining steps optimized similarly...
-
-  ui-tests:
-    name: 🧪 Smart UI Tests
-    needs: [setup, build-and-test]
-    if: needs.setup.outputs.should_run_ui_tests == 'true' && needs.setup.outputs.build_required == 'true'
-    timeout-minutes: 60
-    strategy:
-      matrix:
-        # Run only on latest API level unless on main branch
-        api-level: ${{ github.ref == 'refs/heads/main' && '[29,33]' || '[33]' }}
-
-    steps:
-      # Cache AVD setup between runs
-      - name: Cache AVD
-        uses: actions/cache@v4
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ matrix.api-level }}-${{ runner.os }}-v3
-
-      - name: Create AVD (if cache miss)
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          force-avd-creation: true
-          script: echo "AVD created"
-
-      # Remaining steps...
-
-  # Other jobs optimized similarly...
-
-  deploy:
-    name: 🚀 Smart Deploy
-    needs: [setup, build-and-test, ui-tests]
-    if: needs.setup.outputs.should_deploy == 'true' && needs.build-and-test.result == 'success'
-    steps:
-      - name: Download artifacts
-        if: matrix.variant == 'release'
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts-release-${{ github.run_number }}
-
-      # Only deploy debug builds for PRs
-      - name: Firebase deploy
-        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{ secrets.FIREBASE_APP_ID }}
-          groups: qa-team
-
-  cleanup:
-    name: 🧹 Auto-Cleanup
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - name: Clean Gradle cache
-        run: |
-          rm -rf ~/.gradle/caches/*
-          rm -rf ~/.gradle/wrapper/dists/*
-
-      - name: Delete old artifacts
-        uses: actions/github-script@v7
-        with:
-          script: |
-            // Keep only last 5 successful build artifacts
-            const artifacts = await github.rest.actions.listArtifactsForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              per_page: 100
-            });
-            
-            const successfulArtifacts = artifacts.data.artifacts.filter(a => 
-              a.workflow_run && a.workflow_run.conclusion === 'success'
-            );
-            
-            // Delete older artifacts
-            successfulArtifacts.slice(5).forEach(async artifact => {
-              await github.rest.actions.deleteArtifact({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                artifact_id: artifact.id
-              });
-            });
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+        
+    - name: Set up Gradle
+      uses: gradle/actions/setup-gradle@v3
+      with:
+        gradle-version: '8.1.1'
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Run unit tests
+      run: ./gradlew testDebugUnitTest
+      
+    - name: Build Debug & Release APKs
+      run: ./gradlew assembleDebug assembleRelease
+      
+    - name: Prepare artifacts directory
+      run: mkdir -p artifacts/apks
+      
+    - name: Collect APKs
+      run: |
+        find app/build/outputs/apk -name "*.apk" -exec cp {} artifacts/apks/ \;
+        
+    - name: Create APK bundle ZIP
+      run: |
+        cd artifacts/apks
+        zip -r ../apk-bundle.zip .
+        cd $GITHUB_WORKSPACE
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-build-artifacts
+        path: |
+          artifacts/apk-bundle.zip
+          artifacts/apks/*
+        retention-days: 30
+        
+    - name: Create release summary
+      run: |
+        echo "## 🚀 Android Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "### 📦 Generated Artifacts" >> $GITHUB_STEP_SUMMARY
+        echo "- **Debug APK**" >> $GITHUB_STEP_SUMMARY
+        echo "- **Release APK**" >> $GITHUB_STEP_SUMMARY
+        echo "- **APK Bundle ZIP**" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### ⬇️ Download Instructions" >> $GITHUB_STEP_SUMMARY
+        echo "1. Go to Actions artifacts section" >> $GITHUB_STEP_SUMMARY
+        echo "2. Download \`android-build-artifacts\`" >> $GITHUB_STEP_SUMMARY
+        echo "3. Contains both APKs and bundle ZIP" >> $GITHUB_STEP_SUMMARY
