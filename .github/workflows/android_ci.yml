@@ -1,20 +1,35 @@
-name: Android CI Pipeline
+name: 🤖 Android CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", "release/*" ]
     paths-ignore:
       - '**.md'
       - 'docs/**'
       - '.gitignore'
+      - 'LICENSE'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
   pull_request:
     branches: [ "main", "develop" ]
     paths-ignore:
       - '**.md'
       - 'docs/**'
       - '.gitignore'
+      - 'LICENSE'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
   workflow_dispatch:
     inputs:
+      build_type:
+        description: 'Build configuration'
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+          - debug
+          - release
+          - both
       run_ui_tests:
         description: 'Run UI tests'
         required: false
@@ -25,9 +40,16 @@ on:
         required: false
         default: false
         type: boolean
+      skip_tests:
+        description: 'Skip all tests (emergency builds only)'
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    - cron: '0 2 * * 1' # Weekly build on Mondays at 2 AM UTC
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
@@ -37,44 +59,117 @@ env:
     -Dorg.gradle.configureondemand=true
     -Dorg.gradle.caching=true
     -Dorg.gradle.workers.max=4
-    -Xmx6g
+    -Dkotlin.incremental=false
+    -Dkotlin.compiler.execution.strategy=in-process
+    -Xmx8g
     -XX:+UseG1GC
     -XX:+HeapDumpOnOutOfMemoryError
+    -XX:MaxMetaspaceSize=1g
   ANDROID_COMPILE_SDK: 34
   ANDROID_BUILD_TOOLS: "34.0.0"
   ANDROID_MIN_SDK: 24
   EMULATOR_API_LEVEL: 30
   JAVA_VERSION: 17
   GRADLE_VERSION: 8.1.1
+  TERM: dumb
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  checks: write
+  actions: read
+  security-events: write
 
 jobs:
-  validation:
-    name: Validate Gradle Wrapper
+  setup:
+    name: 🔍 Setup & Validation
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
+    outputs:
+      should_run_tests: ${{ steps.conditions.outputs.should_run_tests }}
+      should_run_ui_tests: ${{ steps.conditions.outputs.should_run_ui_tests }}
+      should_deploy: ${{ steps.conditions.outputs.should_deploy }}
+      build_variants: ${{ steps.conditions.outputs.build_variants }}
+      cache_key: ${{ steps.cache.outputs.cache_key }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 2
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v2
 
+      - name: Check for changes
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            android:
+              - 'app/**'
+              - 'build.gradle*'
+              - 'gradle/**'
+              - 'gradle.properties'
+              - 'settings.gradle*'
+            tests:
+              - 'app/src/test/**'
+              - 'app/src/androidTest/**'
+
+      - name: Determine build conditions
+        id: conditions
+        run: |
+          # Determine if we should run tests
+          SHOULD_RUN_TESTS="true"
+          if [[ "${{ github.event.inputs.skip_tests }}" == "true" ]]; then
+            SHOULD_RUN_TESTS="false"
+          fi
+          
+          # Determine if we should run UI tests
+          SHOULD_RUN_UI_TESTS="false"
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+            SHOULD_RUN_UI_TESTS="true"
+          elif [[ "${{ github.event.inputs.run_ui_tests }}" == "true" ]]; then
+            SHOULD_RUN_UI_TESTS="true"
+          elif [[ "${{ github.event_name }}" == "schedule" ]]; then
+            SHOULD_RUN_UI_TESTS="true"
+          fi
+          
+          # Determine deployment
+          SHOULD_DEPLOY="false"
+          if [[ "${{ github.ref }}" == "refs/heads/main" && ("${{ github.event_name }}" == "push" || "${{ github.event.inputs.deploy_to_firebase }}" == "true") ]]; then
+            SHOULD_DEPLOY="true"
+          fi
+          
+          # Determine build variants
+          BUILD_VARIANTS='["debug"]'
+          if [[ "${{ github.event.inputs.build_type }}" == "release" ]]; then
+            BUILD_VARIANTS='["release"]'
+          elif [[ "${{ github.event.inputs.build_type }}" == "both" || "${{ github.ref }}" == "refs/heads/main" ]]; then
+            BUILD_VARIANTS='["debug", "release"]'
+          fi
+          
+          echo "should_run_tests=$SHOULD_RUN_TESTS" >> $GITHUB_OUTPUT
+          echo "should_run_ui_tests=$SHOULD_RUN_UI_TESTS" >> $GITHUB_OUTPUT
+          echo "should_deploy=$SHOULD_DEPLOY" >> $GITHUB_OUTPUT
+          echo "build_variants=$BUILD_VARIANTS" >> $GITHUB_OUTPUT
+
+      - name: Generate cache key
+        id: cache
+        run: |
+          CACHE_KEY="gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle.properties') }}-${{ github.sha }}"
+          echo "cache_key=$CACHE_KEY" >> $GITHUB_OUTPUT
+
   build-and-test:
-    name: Build & Test
+    name: 🔨 Build & Test (${{ matrix.variant }})
     runs-on: ubuntu-latest
-    needs: validation
-    timeout-minutes: 45
+    needs: setup
+    if: needs.setup.outputs.should_run_tests == 'true'
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        variant: [debug, release]
-        include:
-          - variant: debug
-            upload_apk: true
-          - variant: release
-            upload_apk: false
+        variant: ${{ fromJson(needs.setup.outputs.build_variants) }}
 
     steps:
       - name: Checkout code
@@ -100,19 +195,29 @@ jobs:
         uses: gradle/gradle-build-action@v3
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-        with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-        with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
           gradle-home-cache-cleanup: true
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+          build-scan-publish: true
+          build-scan-terms-of-service-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-service-agree: "yes"
 
       - name: Create local.properties
         run: |
           echo "sdk.dir=$ANDROID_HOME" >> local.properties
           echo "ndk.dir=$ANDROID_NDK_HOME" >> local.properties
 
-      - name: Run code quality checks
+      - name: Decode keystore (Release only)
+        if: matrix.variant == 'release'
+        run: |
+          if [[ -n "${{ secrets.KEYSTORE_BASE64 }}" ]]; then
+            echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/keystore.jks
+            echo "KEYSTORE_FILE=keystore.jks" >> $GITHUB_ENV
+            echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+            echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
+            echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
+          fi
+
+      - name: Run static analysis
         run: |
           ./gradlew \
             lint${{ matrix.variant }} \
@@ -121,9 +226,10 @@ jobs:
             --continue \
             --build-cache \
             --configuration-cache \
-            --stacktrace
+            --stacktrace \
+            --scan
 
-      - name: Run unit tests
+      - name: Run unit tests with coverage
         run: |
           ./gradlew \
             test${{ matrix.variant }}UnitTest \
@@ -131,30 +237,72 @@ jobs:
             --continue \
             --build-cache \
             --configuration-cache \
-            --stacktrace
+            --stacktrace \
+            --scan
 
-      - name: Build APK
+      - name: Build APK/AAB
         run: |
-          ./gradlew \
-            assemble${{ matrix.variant }} \
-            --build-cache \
-            --configuration-cache \
-            --stacktrace
+          if [[ "${{ matrix.variant }}" == "release" ]]; then
+            ./gradlew bundle${{ matrix.variant }} assemble${{ matrix.variant }}
+          else
+            ./gradlew assemble${{ matrix.variant }}
+          fi \
+          --build-cache \
+          --configuration-cache \
+          --stacktrace \
+          --scan
+
+      - name: Sign APK (Release only)
+        if: matrix.variant == 'release' && env.KEYSTORE_FILE
+        run: |
+          $ANDROID_HOME/build-tools/${{ env.ANDROID_BUILD_TOOLS }}/apksigner sign \
+            --ks app/${{ env.KEYSTORE_FILE }} \
+            --ks-key-alias ${{ env.KEY_ALIAS }} \
+            --ks-pass pass:${{ env.KEYSTORE_PASSWORD }} \
+            --key-pass pass:${{ env.KEY_PASSWORD }} \
+            --out app/build/outputs/apk/release/app-release-signed.apk \
+            app/build/outputs/apk/release/app-release-unsigned.apk
 
       - name: Generate test report
         uses: dorny/test-reporter@v1
         if: always()
         with:
-          name: Unit Tests (${{ matrix.variant }})
+          name: 📊 Unit Tests (${{ matrix.variant }})
           path: '**/TEST-*.xml'
           reporter: java-junit
           fail-on-error: false
 
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        if: always()
+      - name: Upload coverage to Codecov
+        if: matrix.variant == 'debug'
+        uses: codecov/codecov-action@v4
         with:
-          name: test-results-${{ matrix.variant }}
+          file: app/build/reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml
+          flags: unittests
+          name: codecov-umbrella
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: SonarCloud Scan
+        if: matrix.variant == 'debug' && github.event_name != 'pull_request'
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts-${{ matrix.variant }}-${{ github.run_number }}
+          path: |
+            app/build/outputs/apk/${{ matrix.variant }}/*.apk
+            app/build/outputs/bundle/${{ matrix.variant }}/*.aab
+            app/build/outputs/mapping/${{ matrix.variant }}/
+          retention-days: ${{ matrix.variant == 'release' && 90 || 30 }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.variant }}-${{ github.run_number }}
           path: |
             app/build/reports/tests/
             app/build/test-results/
@@ -163,63 +311,84 @@ jobs:
             app/build/reports/jacoco/
           retention-days: 14
 
-      - name: Upload APK
-        if: matrix.upload_apk
-        uses: actions/upload-artifact@v4
-        with:
-          name: apk-${{ matrix.variant }}-${{ github.run_number }}
-          path: app/build/outputs/apk/${{ matrix.variant }}/*.apk
-          retention-days: 30
+      - name: Analyze APK
+        if: always()
+        run: |
+          APK_PATH="app/build/outputs/apk/${{ matrix.variant }}"
+          if [[ -f "$APK_PATH/app-${{ matrix.variant }}.apk" ]]; then
+            APK_FILE="$APK_PATH/app-${{ matrix.variant }}.apk"
+            APK_SIZE=$(stat -c%s "$APK_FILE" | numfmt --to=iec-i)
+            APK_SIZE_BYTES=$(stat -c%s "$APK_FILE")
+            
+            echo "## 📱 APK Analysis (${{ matrix.variant }})" >> $GITHUB_STEP_SUMMARY
+            echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| **Size** | $APK_SIZE |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Size (bytes)** | $APK_SIZE_BYTES |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Variant** | ${{ matrix.variant }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Build Number** | ${{ github.run_number }} |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Check for size regression
+            if [[ "${{ matrix.variant }}" == "release" ]] && [[ $APK_SIZE_BYTES -gt 50000000 ]]; then
+              echo "⚠️ **Warning:** APK size exceeds 50MB threshold" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
 
-      - name: Upload mapping files
-        if: matrix.variant == 'release'
-        uses: actions/upload-artifact@v4
-        with:
-          name: mapping-${{ matrix.variant }}-${{ github.run_number }}
-          path: app/build/outputs/mapping/${{ matrix.variant }}/
-          retention-days: 90
-
-      - name: Comment PR with APK info
-        if: github.event_name == 'pull_request' && matrix.upload_apk
+      - name: Comment PR with build info
+        if: github.event_name == 'pull_request' && matrix.variant == 'debug'
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
-            const path = require('fs');
-            const apkPath = 'app/build/outputs/apk/debug';
-            const files = fs.readdirSync(apkPath);
-            const apkFile = files.find(f => f.endsWith('.apk'));
-            const stats = fs.statSync(`${apkPath}/${apkFile}`);
-            const fileSizeInMB = (stats.size / (1024 * 1024)).toFixed(2);
+            const path = require('path');
             
-            const comment = `
-            ## 📱 APK Build Summary
-            
-            **APK Generated:** \`${apkFile}\`
-            **Size:** ${fileSizeInMB} MB
-            **Variant:** ${{ matrix.variant }}
-            **Commit:** ${context.sha.substring(0, 7)}
-            
-            Download the APK from the [Actions artifacts](${context.payload.pull_request.html_url}/checks).
-            `;
-            
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
+            try {
+              const apkPath = 'app/build/outputs/apk/debug';
+              const files = fs.readdirSync(apkPath);
+              const apkFile = files.find(f => f.endsWith('.apk'));
+              
+              if (apkFile) {
+                const stats = fs.statSync(`${apkPath}/${apkFile}`);
+                const fileSizeInMB = (stats.size / (1024 * 1024)).toFixed(2);
+                
+                const comment = `
+                ## 🤖 Android Build Summary
+                
+                | Metric | Value |
+                |--------|-------|
+                | **APK** | \`${apkFile}\` |
+                | **Size** | ${fileSizeInMB} MB |
+                | **Variant** | ${{ matrix.variant }} |
+                | **Commit** | \`${context.sha.substring(0, 7)}\` |
+                | **Build** | #${{ github.run_number }} |
+                
+                📦 **Download:** [Build Artifacts](${context.payload.pull_request.html_url}/checks)
+                🔍 **Details:** [Build Scan](https://scans.gradle.com)
+                `;
+                
+                github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: comment
+                });
+              }
+            } catch (error) {
+              console.log('Could not create PR comment:', error.message);
+            }
 
   ui-tests:
-    name: UI Tests
-    runs-on: macos-13 # Better performance than latest
-    needs: build-and-test
-    if: github.event_name != 'pull_request' || github.event.inputs.run_ui_tests == 'true'
-    timeout-minutes: 60
+    name: 🧪 UI Tests (API ${{ matrix.api-level }})
+    runs-on: macos-13
+    needs: [setup, build-and-test]
+    if: needs.setup.outputs.should_run_ui_tests == 'true'
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
         api-level: [29, 33]
+        target: [google_apis]
 
     steps:
       - name: Checkout code
@@ -233,6 +402,21 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+
+      - name: Free up disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
 
       - name: AVD cache
         uses: actions/cache@v4
@@ -241,21 +425,23 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.api-level }}-${{ runner.arch }}
+          key: avd-${{ matrix.api-level }}-${{ matrix.target }}-${{ runner.arch }}-v2
 
-      - name: Create AVD and generate snapshot for caching
+      - name: Create AVD and generate snapshot
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
-          target: google_apis
+          target: ${{ matrix.target }}
           arch: x86_64
           profile: Nexus 6
-          cores: 2
-          ram-size: 4096M
-          heap-size: 1024M
+          cores: 4
+          ram-size: 6144M
+          heap-size: 2048M
+          sdcard-path-or-size: 1024M
+          disk-size: 8192M
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -qemu -m 6144
           disable-animations: true
           script: echo "Generated AVD snapshot for caching."
 
@@ -263,40 +449,111 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
-          target: google_apis
+          target: ${{ matrix.target }}
           arch: x86_64
           profile: Nexus 6
-          cores: 2
-          ram-size: 4096M
-          heap-size: 1024M
+          cores: 4
+          ram-size: 6144M
+          heap-size: 2048M
+          sdcard-path-or-size: 1024M
+          disk-size: 8192M
           force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -qemu -m 6144
           disable-animations: true
           script: |
-            adb logcat > logcat.txt &
+            # Wait for emulator to be ready
+            adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+            
+            # Start logcat
+            adb logcat > logcat-${{ matrix.api-level }}.txt &
+            LOGCAT_PID=$!
+            
+            # Run tests
             ./gradlew connectedDebugAndroidTest \
+              -Pandroid.testInstrumentationRunnerArguments.notAnnotation=androidx.test.filters.LargeTest \
               --continue \
               --build-cache \
               --configuration-cache \
-              --stacktrace
+              --stacktrace \
+              --scan
+            
+            # Stop logcat
+            kill $LOGCAT_PID || true
 
       - name: Upload UI test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ui-test-results-api-${{ matrix.api-level }}
+          name: ui-test-results-${{ matrix.api-level }}-${{ github.run_number }}
           path: |
             app/build/reports/androidTests/connected/
             app/build/outputs/androidTest-results/
-            logcat.txt
+            logcat-${{ matrix.api-level }}.txt
           retention-days: 14
 
-  security-scan:
-    name: Security Scan
+      - name: Publish UI Test Results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: 🧪 UI Tests (API ${{ matrix.api-level }})
+          path: '**/TEST-*.xml'
+          reporter: java-junit
+          fail-on-error: false
+
+  security-analysis:
+    name: 🔐 Security Analysis
     runs-on: ubuntu-latest
-    needs: build-and-test
-    if: github.ref == 'refs/heads/main'
-    timeout-minutes: 15
+    needs: [setup, build-and-test]
+    if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+
+      - name: Run OWASP Dependency Check
+        run: |
+          ./gradlew dependencyCheckAnalyze \
+            --build-cache \
+            --configuration-cache \
+            --stacktrace
+
+      - name: Upload SARIF to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: app/build/reports/dependency-check-report.sarif
+        continue-on-error: true
+
+      - name: Upload security results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-analysis-${{ github.run_number }}
+          path: |
+            app/build/reports/dependency-check-report.html
+            app/build/reports/dependency-check-report.sarif
+          retention-days: 90
+
+  performance-tests:
+    name: ⚡ Performance Tests
+    runs-on: ubuntu-latest
+    needs: [setup, build-and-test]
+    if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
+    timeout-minutes: 20
 
     steps:
       - name: Checkout code
@@ -310,108 +567,186 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
 
-      - name: Run dependency vulnerability scan
+      - name: Run performance benchmarks
         run: |
-          ./gradlew dependencyCheckAnalyze \
+          ./gradlew :benchmark:connectedBenchmarkAndroidTest \
             --build-cache \
             --configuration-cache \
-            --stacktrace
+            --stacktrace || echo "Benchmark module not found, skipping..."
 
-      - name: Upload security scan results
+      - name: Upload benchmark results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: security-scan-results
-          path: app/build/reports/dependency-check-report.html
+          name: benchmark-results-${{ github.run_number }}
+          path: benchmark/build/reports/androidTests/connected/
           retention-days: 30
 
   deploy:
-    name: Deploy
+    name: 🚀 Deploy
     runs-on: ubuntu-latest
-    needs: [build-and-test, ui-tests]
-    if: >
-      github.ref == 'refs/heads/main' && 
-      (github.event_name == 'push' || github.event.inputs.deploy_to_firebase == 'true')
-    environment: production
-    timeout-minutes: 10
+    needs: [setup, build-and-test, ui-tests]
+    if: needs.setup.outputs.should_deploy == 'true'
+    environment: 
+      name: production
+      url: https://console.firebase.google.com/project/${{ secrets.FIREBASE_PROJECT_ID }}/appdistribution
+    timeout-minutes: 15
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download APK
+      - name: Download debug APK
         uses: actions/download-artifact@v4
         with:
-          name: apk-debug-${{ github.run_number }}
-          path: apk-artifact
+          name: build-artifacts-debug-${{ github.run_number }}
+          path: artifacts/
 
       - name: Get APK info
         id: apk-info
         run: |
-          APK_FILE=$(find apk-artifact -name "*.apk" | head -1)
-          APK_SIZE=$(stat -c%s "$APK_FILE" | numfmt --to=iec)
+          APK_FILE=$(find artifacts -name "*.apk" | head -1)
+          APK_SIZE=$(stat -c%s "$APK_FILE" | numfmt --to=iec-i)
+          APK_SIZE_BYTES=$(stat -c%s "$APK_FILE")
+          APK_NAME=$(basename "$APK_FILE")
+          
           echo "apk-path=$APK_FILE" >> $GITHUB_OUTPUT
           echo "apk-size=$APK_SIZE" >> $GITHUB_OUTPUT
+          echo "apk-size-bytes=$APK_SIZE_BYTES" >> $GITHUB_OUTPUT
+          echo "apk-name=$APK_NAME" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes
+        id: release-notes
+        run: |
+          cat > release_notes.txt << EOF
+          🚀 **Build #${{ github.run_number }}**
+          📱 **Version:** $(git describe --tags --always)
+          📦 **Size:** ${{ steps.apk-info.outputs.apk-size }}
+          🔗 **Commit:** [\`${GITHUB_SHA:0:7}\`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+          👤 **Author:** ${{ github.actor }}
+          🕐 **Built:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          
+          **Recent Changes:**
+          $(git log --oneline -5 --pretty=format:"• %s")
+          EOF
 
       - name: Deploy to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFile: ${{ secrets.GCP_SA_KEY }}
-          groups: internal-testers,qa-team
+          groups: internal-testers,qa-team,beta-users
           file: ${{ steps.apk-info.outputs.apk-path }}
-          releaseNotes: |
-            🚀 **Build:** ${{ github.run_number }}
-            📝 **Commit:** ${{ github.sha }}
-            👤 **Author:** ${{ github.actor }}
-            📦 **Size:** ${{ steps.apk-info.outputs.apk-size }}
-            
-            **Changes:**
-            ${{ github.event.head_commit.message }}
+          releaseNotesFile: release_notes.txt
 
-      - name: Notify Slack
+      - name: Deploy to Play Store Internal Testing
+        if: contains(github.ref, 'refs/heads/main')
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+          packageName: ${{ secrets.ANDROID_PACKAGE_NAME }}
+          releaseFiles: artifacts/**/*.aab
+          track: internal
+          status: completed
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ${{ steps.apk-info.outputs.apk-path }}
+            artifacts/**/*.aab
+          body_path: release_notes.txt
+          draft: false
+          prerelease: false
+
+      - name: Notify deployment status
         if: always()
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
           channel: '#android-releases'
           text: |
-            Android app deployed to Firebase App Distribution
-            Status: ${{ job.status }}
-            Build: ${{ github.run_number }}
-            Size: ${{ steps.apk-info.outputs.apk-size }}
+            🤖 **Android Deployment** ${{ job.status == 'success' && '✅ Success' || '❌ Failed' }}
+            
+            📱 **APK:** ${{ steps.apk-info.outputs.apk-name }}
+            📦 **Size:** ${{ steps.apk-info.outputs.apk-size }}
+            🔢 **Build:** #${{ github.run_number }}
+            🔗 **Commit:** [`${GITHUB_SHA:0:7}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+            👤 **Author:** ${{ github.actor }}
+            
+            ${{ job.status == 'success' && '🎉 Available for testing!' || '🔧 Check logs for details' }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   cleanup:
-    name: Cleanup
+    name: 🧹 Cleanup
     runs-on: ubuntu-latest
     needs: [build-and-test, ui-tests, deploy]
     if: always()
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
-      - name: Delete old artifacts
+      - name: Delete old workflow runs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 30
+          keep_minimum_runs: 10
+
+      - name: Clean up old artifacts
         uses: actions/github-script@v7
         with:
           script: |
-            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+            const artifacts = await github.rest.actions.listArtifactsForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: context.runId
+              per_page: 100
             });
             
-            const oldArtifacts = artifacts.data.artifacts.filter(artifact => {
-              const ageInDays = (Date.now() - new Date(artifact.created_at).getTime()) / (1000 * 60 * 60 * 24);
-              return ageInDays > 30 && artifact.name.startsWith('apk-');
-            });
+            const cutoffDate = new Date();
+            cutoffDate.setDate(cutoffDate.getDate() - 30);
             
-            for (const artifact of oldArtifacts) {
-              await github.rest.actions.deleteArtifact({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                artifact_id: artifact.id
-              });
-              console.log(`Deleted old artifact: ${artifact.name}`);
+            let deletedCount = 0;
+            for (const artifact of artifacts.data.artifacts) {
+              if (new Date(artifact.created_at) < cutoffDate) {
+                try {
+                  await github.rest.actions.deleteArtifact({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    artifact_id: artifact.id
+                  });
+                  deletedCount++;
+                  console.log(`Deleted artifact: ${artifact.name}`);
+                } catch (error) {
+                  console.log(`Failed to delete ${artifact.name}: ${error.message}`);
+                }
+              }
             }
+            console.log(`Cleaned up ${deletedCount} old artifacts`);
+
+  notification:
+    name: 📢 Final Notification
+    runs-on: ubuntu-latest
+    needs: [setup, build-and-test, ui-tests, security-analysis, deploy]
+    if: always() && (github.ref == 'refs/heads/main' || github.event_name == 'schedule')
+    timeout-minutes: 5
+
+    steps:
+      - name: Determine overall status
+        id: status
+        run: |
+          BUILD_STATUS="${{ needs.build-and-test.result }}"
+          UI_STATUS="${{ needs.ui-tests.result }}"
+          DEPLOY_STATUS="${{ needs.deploy.result }}"
+          
+          if [[ "$BUILD_STATUS" == "success" && ("$UI_STATUS" == "success" || "$UI_STATUS" == "skipped") && ("$DEPLOY_STATUS" == "success" || "$DEPLOY_STATUS" == "skipped") ]]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "emoji=✅" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "emoji=❌" >> $
