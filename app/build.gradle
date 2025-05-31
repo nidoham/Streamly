@@ -102,7 +102,7 @@ android {
             // no idea how they ended up in the META-INF dir...
             excludes += ['META-INF/README.md', 'META-INF/CHANGES',
                          // 'COPYRIGHT' belongs to RxJava...
-                         'META-INF/COPYRIGHT']
+                         'META-INF/COPYRIGHT', 'META-INF/DEPENDENCIES']
         }
     }
 }
