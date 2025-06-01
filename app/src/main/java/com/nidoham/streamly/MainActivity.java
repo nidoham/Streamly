@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity
     private ViewPager2 viewPager;
     private BottomNavigationFragmentsAdapter adapter;
 
+    public static final boolean DEBUG = !BuildConfig.BUILD_TYPE.equals("release");
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

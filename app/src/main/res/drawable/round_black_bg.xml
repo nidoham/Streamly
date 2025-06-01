@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    
+    <solid android:color="#000000" /> <!-- কালো ব্যাকগ্রাউন্ড -->
+
+    <corners android:radius="24dp" /> <!-- গোলাকার প্রভাব -->
+
+    <size
+        android:width="48dp"
+        android:height="48dp" /> <!-- সাইজ (প্রয়োজনে পরিবর্তন করুন) -->
+</shape>

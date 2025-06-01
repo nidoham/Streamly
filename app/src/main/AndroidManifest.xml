@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
         android:roundIcon="@drawable/app_icon"
@@ -27,6 +28,11 @@
         <!-- Main Activity -->
         <activity
             android:name=".MainActivity"
+            android:exported="false"/>
+
+        <!-- ReCaptchaActivity -->
+        <activity
+            android:name=".ReCaptchaActivity"
             android:exported="false"/>
             
     </application>
