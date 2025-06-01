@@ -21,7 +21,6 @@ public class MyApplication extends Application {
     private void initializeNewPipeExtractor() {
         Log.d(TAG, "Initializing NewPipeExtractor...");
         final Context context = this;
-
         // Initialize the downloader. You might want to customize the OkHttpClient.
         // DownloaderImpl.init(null); // Pass a custom OkHttpClient if needed, null uses default.
         final Downloader downloader = DownloaderImpl.init(null);
