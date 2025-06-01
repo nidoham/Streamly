@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/values-night-v31/themes.xml - রাতের থিম স্টাইলস API 31+ -->
+<resources>
+    <!-- ইউটিউব রাতের থিম - API 31+ এর জন্য অতিরিক্ত ফিচার সহ -->
+    <style name="AppTheme" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- ম্যাটেরিয়াল ৩ প্রাইমারি কালার সিস্টেম - মূল রং সেটআপ -->
+        <item name="colorPrimary">@color/md_theme_dark_primary</item>                    <!-- প্রাইমারি রং - অ্যাপবার, বাটন -->
+        <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>                <!-- প্রাইমারি রঙের উপর টেক্সট -->
+        <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>  <!-- প্রাইমারি কন্টেইনার - FAB ব্যাকগ্রাউন্ড -->
+        <item name="colorOnPrimaryContainer">@color/md_theme_dark_onPrimaryContainer</item> <!-- প্রাইমারি কন্টেইনারের উপর টেক্সট -->
+        
+        <!-- ম্যাটেরিয়াল ৩ সেকেন্ডারি কালার সিস্টেম - সাহায্যকারী রং -->
+        <item name="colorSecondary">@color/md_theme_dark_secondary</item>                <!-- সেকেন্ডারি রং - চিপস, স্লাইডার -->
+        <item name="colorOnSecondary">@color/md_theme_dark_onSecondary</item>            <!-- সেকেন্ডারি রঙের উপর টেক্সট -->
+        <item name="colorSecondaryContainer">@color/md_theme_dark_secondaryContainer</item> <!-- সেকেন্ডারি কন্টেইনার -->
+        <item name="colorOnSecondaryContainer">@color/md_theme_dark_onSecondaryContainer</item> <!-- সেকেন্ডারি কন্টেইনারের উপর টেক্সট -->
+        
+        <!-- ম্যাটেরিয়াল ৩ টার্শিয়ারি কালার সিস্টেম - তৃতীয় রং -->
+        <item name="colorTertiary">@color/md_theme_dark_tertiary</item>                  <!-- টার্শিয়ারি রং - একসেন্ট কালার -->
+        <item name="colorOnTertiary">@color/md_theme_dark_onTertiary</item>              <!-- টার্শিয়ারি রঙের উপর টেক্সট -->
+        <item name="colorTertiaryContainer">@color/md_theme_dark_tertiaryContainer</item> <!-- টার্শিয়ারি কন্টেইনার -->
+        <item name="colorOnTertiaryContainer">@color/md_theme_dark_onTertiaryContainer</item> <!-- টার্শিয়ারি কন্টেইনারের উপর টেক্সট -->
+        
+        <!-- ম্যাটেরিয়াল ৩ এরর কালার সিস্টেম - ভুল প্রদর্শনের জন্য -->
+        <item name="colorError">@color/md_theme_dark_error</item>                        <!-- এরর রং - ডিলিট বাটন, এরর মেসেজ -->
+        <item name="colorOnError">@color/md_theme_dark_onError</item>                    <!-- এরর রঙের উপর টেক্সট -->
+        <item name="colorErrorContainer">@color/md_theme_dark_errorContainer</item>      <!-- এরর কন্টেইনার - এরর বক্স ব্যাকগ্রাউন্ড -->
+        <item name="colorOnErrorContainer">@color/md_theme_dark_onErrorContainer</item>  <!-- এরর কন্টেইনারের উপর টেক্সট -->
+        
+        <!-- ম্যাটেরিয়াল ৩ সারফেস কালার সিস্টেম - পৃষ্ঠতল রং -->
+        <item name="colorSurface">@color/md_theme_dark_surface</item>                    <!-- সারফেস - কার্ড, বটম শিট -->
+        <item name="colorOnSurface">@color/md_theme_dark_onSurface</item>                <!-- সারফেসের উপর টেক্সট -->
+        <item name="colorSurfaceVariant">@color/md_theme_dark_surfaceVariant</item>      <!-- সারফেস ভ্যারিয়েন্ট - লিস্ট আইটেম -->
+        <item name="colorOnSurfaceVariant">@color/md_theme_dark_onSurfaceVariant</item>  <!-- সারফেস ভ্যারিয়েন্টের উপর টেক্সট -->
+        
+        <!-- ম্যাটেরিয়াল ৩ আউটলাইন সিস্টেম - বর্ডার এবং ডিভাইডার -->
+        <item name="colorOutline">@color/md_theme_dark_outline</item>                    <!-- আউটলাইন - ইনপুট ফিল্ড বর্ডার -->
+        <item name="colorOutlineVariant">@color/md_theme_dark_outlineVariant</item>      <!-- হালকা আউটলাইন - সাবটল ডিভাইডার -->
+        
+        <!-- ম্যাটেরিয়াল ৩ ব্যাকগ্রাউন্ড সিস্টেম - স্ক্রিন ব্যাকগ্রাউন্ড -->
+        <item name="android:colorBackground">@color/md_theme_dark_background</item>      <!-- মূল স্ক্রিন ব্যাকগ্রাউন্ড -->
+        <item name="colorOnBackground">@color/md_theme_dark_onBackground</item>          <!-- ব্যাকগ্রাউন্ডের উপর টেক্সট -->
+        
+        <!-- ম্যাটেরিয়াল ৩ শেপ সিস্টেম - UI এলিমেন্টের আকার -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.YouTube.SmallComponent</item>   <!-- ছোট কম্পোনেন্ট - চিপস, বাটন -->
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.YouTube.MediumComponent</item> <!-- মাঝারি কম্পোনেন্ট - কার্ড -->
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.YouTube.LargeComponent</item>   <!-- বড় কম্পোনেন্ট - বটম শিট -->
+        
+        <!-- স্ট্যাটাস বার কনফিগারেশন - উপরের স্ট্যাটাস বার -->
+        <item name="android:statusBarColor">@color/md_theme_dark_primary</item>              <!-- স্ট্যাটাস বার রং -->
+        <item name="android:windowLightStatusBar">false</item>                            <!-- গাঢ় স্ট্যাটাস বার - সাদা আইকন -->
+        
+        <!-- নেভিগেশন বার কনফিগারেশন - নিচের নেভিগেশন বার -->
+        <item name="android:navigationBarColor">@color/md_theme_dark_primary</item>          <!-- নেভিগেশন বার রং -->
+        <item name="android:windowLightNavigationBar">false</item>                        <!-- গাঢ় নেভিগেশন বার - সাদা বাটন -->
+        
+        <!-- উইন্ডো ব্যাকগ্রাউন্ড - মূল উইন্ডোর ব্যাকগ্রাউন্ড -->
+        <item name="android:windowBackground">@color/youtube_bg_primary</item>            <!-- উইন্ডো ব্যাকগ্রাউন্ড রং -->
+    </style>
+</resources>

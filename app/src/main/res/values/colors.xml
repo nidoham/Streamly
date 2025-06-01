@@ -1,245 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- res/values/colors.xml - দিনের থিম কালারস -->
 <resources>
-
-    <color name="md_theme_primary">#66558E</color>
-    <color name="md_theme_onPrimary">#FFFFFF</color>
-    <color name="md_theme_primaryContainer">#EADDFF</color>
-    <color name="md_theme_onPrimaryContainer">#4E3D75</color>
-    <color name="md_theme_secondary">#625B70</color>
-    <color name="md_theme_onSecondary">#FFFFFF</color>
-    <color name="md_theme_secondaryContainer">#E9DEF8</color>
-    <color name="md_theme_onSecondaryContainer">#4A4358</color>
-    <color name="md_theme_tertiary">#7E525F</color>
-    <color name="md_theme_onTertiary">#FFFFFF</color>
-    <color name="md_theme_tertiaryContainer">#FFD9E2</color>
-    <color name="md_theme_onTertiaryContainer">#643B47</color>
-    <color name="md_theme_error">#BA1A1A</color>
-    <color name="md_theme_onError">#FFFFFF</color>
-    <color name="md_theme_errorContainer">#FFDAD6</color>
-    <color name="md_theme_onErrorContainer">#93000A</color>
-    <color name="md_theme_background">#FEF7FF</color>
-    <color name="md_theme_onBackground">#1D1B20</color>
-    <color name="md_theme_surface">#FEF7FF</color>
-    <color name="md_theme_onSurface">#1D1B20</color>
-    <color name="md_theme_surfaceVariant">#E7E0EB</color>
-    <color name="md_theme_onSurfaceVariant">#49454E</color>
-    <color name="md_theme_outline">#7A757F</color>
-    <color name="md_theme_outlineVariant">#CBC4CF</color>
-    <color name="md_theme_scrim">#000000</color>
-    <color name="md_theme_inverseSurface">#322F35</color>
-    <color name="md_theme_inverseOnSurface">#F5EFF7</color>
-    <color name="md_theme_inversePrimary">#D1BCFD</color>
-    <color name="md_theme_primaryFixed">#EADDFF</color>
-    <color name="md_theme_onPrimaryFixed">#220F46</color>
-    <color name="md_theme_primaryFixedDim">#D1BCFD</color>
-    <color name="md_theme_onPrimaryFixedVariant">#4E3D75</color>
-    <color name="md_theme_secondaryFixed">#E9DEF8</color>
-    <color name="md_theme_onSecondaryFixed">#1E192B</color>
-    <color name="md_theme_secondaryFixedDim">#CCC2DB</color>
-    <color name="md_theme_onSecondaryFixedVariant">#4A4358</color>
-    <color name="md_theme_tertiaryFixed">#FFD9E2</color>
-    <color name="md_theme_onTertiaryFixed">#31101C</color>
-    <color name="md_theme_tertiaryFixedDim">#F0B8C6</color>
-    <color name="md_theme_onTertiaryFixedVariant">#643B47</color>
-    <color name="md_theme_surfaceDim">#DED8E0</color>
-    <color name="md_theme_surfaceBright">#FEF7FF</color>
-    <color name="md_theme_surfaceContainerLowest">#FFFFFF</color>
-    <color name="md_theme_surfaceContainerLow">#F8F1FA</color>
-    <color name="md_theme_surfaceContainer">#F2ECF4</color>
-    <color name="md_theme_surfaceContainerHigh">#ECE6EE</color>
-    <color name="md_theme_surfaceContainerHighest">#E7E0E8</color> <!-- null -->
-    <color name="md_theme_primary_mediumContrast">#3D2C63</color>
-    <color name="md_theme_onPrimary_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_primaryContainer_mediumContrast">#75639E</color>
-    <color name="md_theme_onPrimaryContainer_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_secondary_mediumContrast">#393347</color>
-    <color name="md_theme_onSecondary_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_secondaryContainer_mediumContrast">#71697F</color>
-    <color name="md_theme_onSecondaryContainer_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_tertiary_mediumContrast">#512B37</color>
-    <color name="md_theme_onTertiary_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_tertiaryContainer_mediumContrast">#8E606D</color>
-    <color name="md_theme_onTertiaryContainer_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_error_mediumContrast">#740006</color>
-    <color name="md_theme_onError_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_errorContainer_mediumContrast">#CF2C27</color>
-    <color name="md_theme_onErrorContainer_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_background_mediumContrast">#FEF7FF</color>
-    <color name="md_theme_onBackground_mediumContrast">#1D1B20</color>
-    <color name="md_theme_surface_mediumContrast">#FEF7FF</color>
-    <color name="md_theme_onSurface_mediumContrast">#121016</color>
-    <color name="md_theme_surfaceVariant_mediumContrast">#E7E0EB</color>
-    <color name="md_theme_onSurfaceVariant_mediumContrast">#38353D</color>
-    <color name="md_theme_outline_mediumContrast">#55515A</color>
-    <color name="md_theme_outlineVariant_mediumContrast">#706B75</color>
-    <color name="md_theme_scrim_mediumContrast">#000000</color>
-    <color name="md_theme_inverseSurface_mediumContrast">#322F35</color>
-    <color name="md_theme_inverseOnSurface_mediumContrast">#F5EFF7</color>
-    <color name="md_theme_inversePrimary_mediumContrast">#D1BCFD</color>
-    <color name="md_theme_primaryFixed_mediumContrast">#75639E</color>
-    <color name="md_theme_onPrimaryFixed_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_primaryFixedDim_mediumContrast">#5D4B84</color>
-    <color name="md_theme_onPrimaryFixedVariant_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_secondaryFixed_mediumContrast">#71697F</color>
-    <color name="md_theme_onSecondaryFixed_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_secondaryFixedDim_mediumContrast">#595166</color>
-    <color name="md_theme_onSecondaryFixedVariant_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_tertiaryFixed_mediumContrast">#8E606D</color>
-    <color name="md_theme_onTertiaryFixed_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_tertiaryFixedDim_mediumContrast">#734855</color>
-    <color name="md_theme_onTertiaryFixedVariant_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_surfaceDim_mediumContrast">#CAC5CC</color>
-    <color name="md_theme_surfaceBright_mediumContrast">#FEF7FF</color>
-    <color name="md_theme_surfaceContainerLowest_mediumContrast">#FFFFFF</color>
-    <color name="md_theme_surfaceContainerLow_mediumContrast">#F8F1FA</color>
-    <color name="md_theme_surfaceContainer_mediumContrast">#ECE6EE</color>
-    <color name="md_theme_surfaceContainerHigh_mediumContrast">#E1DBE3</color>
-    <color name="md_theme_surfaceContainerHighest_mediumContrast">#D5D0D8</color>
-    <color name="md_theme_primary_highContrast">#332258</color>
-    <color name="md_theme_onPrimary_highContrast">#FFFFFF</color>
-    <color name="md_theme_primaryContainer_highContrast">#513F77</color>
-    <color name="md_theme_onPrimaryContainer_highContrast">#FFFFFF</color>
-    <color name="md_theme_secondary_highContrast">#2F293C</color>
-    <color name="md_theme_onSecondary_highContrast">#FFFFFF</color>
-    <color name="md_theme_secondaryContainer_highContrast">#4D465A</color>
-    <color name="md_theme_onSecondaryContainer_highContrast">#FFFFFF</color>
-    <color name="md_theme_tertiary_highContrast">#45212D</color>
-    <color name="md_theme_onTertiary_highContrast">#FFFFFF</color>
-    <color name="md_theme_tertiaryContainer_highContrast">#663D49</color>
-    <color name="md_theme_onTertiaryContainer_highContrast">#FFFFFF</color>
-    <color name="md_theme_error_highContrast">#600004</color>
-    <color name="md_theme_onError_highContrast">#FFFFFF</color>
-    <color name="md_theme_errorContainer_highContrast">#98000A</color>
-    <color name="md_theme_onErrorContainer_highContrast">#FFFFFF</color>
-    <color name="md_theme_background_highContrast">#FEF7FF</color>
-    <color name="md_theme_onBackground_highContrast">#1D1B20</color>
-    <color name="md_theme_surface_highContrast">#FEF7FF</color>
-    <color name="md_theme_onSurface_highContrast">#000000</color>
-    <color name="md_theme_surfaceVariant_highContrast">#E7E0EB</color>
-    <color name="md_theme_onSurfaceVariant_highContrast">#000000</color>
-    <color name="md_theme_outline_highContrast">#2E2B33</color>
-    <color name="md_theme_outlineVariant_highContrast">#4B4851</color>
-    <color name="md_theme_scrim_highContrast">#000000</color>
-    <color name="md_theme_inverseSurface_highContrast">#322F35</color>
-    <color name="md_theme_inverseOnSurface_highContrast">#FFFFFF</color>
-    <color name="md_theme_inversePrimary_highContrast">#D1BCFD</color>
-    <color name="md_theme_primaryFixed_highContrast">#513F77</color>
-    <color name="md_theme_onPrimaryFixed_highContrast">#FFFFFF</color>
-    <color name="md_theme_primaryFixedDim_highContrast">#3A285F</color>
-    <color name="md_theme_onPrimaryFixedVariant_highContrast">#FFFFFF</color>
-    <color name="md_theme_secondaryFixed_highContrast">#4D465A</color>
-    <color name="md_theme_onSecondaryFixed_highContrast">#FFFFFF</color>
-    <color name="md_theme_secondaryFixedDim_highContrast">#363043</color>
-    <color name="md_theme_onSecondaryFixedVariant_highContrast">#FFFFFF</color>
-    <color name="md_theme_tertiaryFixed_highContrast">#663D49</color>
-    <color name="md_theme_onTertiaryFixed_highContrast">#FFFFFF</color>
-    <color name="md_theme_tertiaryFixedDim_highContrast">#4D2733</color>
-    <color name="md_theme_onTertiaryFixedVariant_highContrast">#FFFFFF</color>
-    <color name="md_theme_surfaceDim_highContrast">#BCB7BF</color>
-    <color name="md_theme_surfaceBright_highContrast">#FEF7FF</color>
-    <color name="md_theme_surfaceContainerLowest_highContrast">#FFFFFF</color>
-    <color name="md_theme_surfaceContainerLow_highContrast">#F5EFF7</color>
-    <color name="md_theme_surfaceContainer_highContrast">#E7E0E8</color>
-    <color name="md_theme_surfaceContainerHigh_highContrast">#D8D2DA</color>
-    <color name="md_theme_surfaceContainerHighest_highContrast">#CAC5CC</color>
-
-    <color name="contrastColor">@color/black</color>
-    <color name="defaultIconTint">@color/black</color>
-
-    <!-- Social media colors -->
-    <color name="facebook_blue">#1877F2</color>
-    <color name="twitter_blue">#1DA1F2</color>
-
-    <!-- Common Colors -->
-    <color name="icon_color">#CAC4D0</color>
-
-    <color name="ic_launcher_background">#CD201F</color>
-
-    <color name="placeholder_background">#999999</color>
-    <color name="placeholder_foreground">#6C6C6C</color>
-
-    <!-- Light Theme -->
-    <color name="light_background_color">#EEEEEE</color>
-    <color name="light_dialog_background_color">#EEEEEE</color>
-    <color name="light_settings_accent_color">#e53935</color>
-    <color name="light_separator_color">#32000000</color>
-    <color name="light_ripple_color">#48868686</color>
-    <color name="light_selected_color">#2a868686</color>
-    <color name="light_contrast_background_color">#1fa6a6a6</color>
-    <color name="light_shadow_start_color">#5a000000</color>
-    <color name="light_license_background_color">#ffffff</color>
-    <color name="light_license_text_color">#212121</color>
-    <color name="light_card_item_background_color">#F8F8F8</color>
-    <color name="light_card_item_contrast_color">#E9E9E9</color>
-    <color name="light_border_color">#33000000</color>
-
-    <color name="lightReactionBackground">#F0F0F0</color>
-
-    <!-- Dark Theme -->
-    <color name="dark_background_color">#222222</color>
-    <color name="dark_dialog_background_color">#424242</color>
-    <color name="dark_settings_accent_color">#ff5252</color>
-    <color name="dark_separator_color">#0affffff</color>
-    <color name="dark_ripple_color">#48ffffff</color>
-    <color name="dark_selected_color">#2affffff</color>
-    <color name="dark_contrast_background_color">#1f717171</color>
-    <color name="dark_shadow_start_color">#82000000</color>
-    <color name="dark_license_background_color">#424242</color>
-    <color name="dark_license_text_color">#ffffff</color>
-    <color name="dark_queue_background_color">#af000000</color>
-    <color name="dark_card_item_background_color">#313131</color>
-    <color name="dark_card_item_contrast_color">#474747</color>
-    <color name="dark_border_color">#33FFFFFF</color>
-
-    <!-- Black Theme -->
-    <color name="black_background_color">#000000</color>
-    <color name="black_settings_accent_color">@color/dark_settings_accent_color</color>
-    <color name="black_separator_color">#1effffff</color>
-    <color name="black_contrast_background_color">#23454545</color>
-    <color name="black_card_item_background_color">#0F0F0F</color>
-    <color name="black_card_item_contrast_color">#202020</color>
-    <color name="black_border_color">#25FFFFFF</color>
-
-    <!-- Miscellaneous -->
-    <color name="queue_background_color">@color/dark_queue_background_color</color>
-    <color name="drawer_header_font_color">#F2FFFFFF</color>
-    <color name="duration_background_color">#aa000000</color>
-    <color name="live_duration_background_color">#c8E53935</color>
-    <color name="playlist_stream_count_background_color">#e6000000</color>
-    <color name="duration_text_color">#EEFFFFFF</color>
-    <color name="video_overlay_color">#64000000</color>
-
-    <color name="subscribe_text_color">#fff</color>
-    <color name="subscribed_background_color">#d6d6d6</color>
-    <color name="subscribed_text_color">#717171</color>
-
-    <color name="transparent_background_color">#00000000</color>
-    <color name="selected_background_color">#96717171</color>
-
-    <!-- GigaGet theme -->
-    <color name="bluegray">#607D8B</color>
-
-    <!-- GigaGet download Theme colors -->
-    <color name="audio_left_to_load_color">#555555</color>
-    <color name="audio_already_load_color">#000000</color>
-    <color name="video_left_to_load_color">#CD5656</color>
-    <color name="video_already_load_color">#BC211D</color>
-    <color name="subtitle_left_to_load_color">#008ea4</color>
-    <color name="subtitle_already_load_color">#005a71</color>
-
-    <!-- GigaGet Component colors -->
-    <color name="white">#FFFFFF</color>
-    <color name="white_secondary">#C9CACB</color>
-
-    <color name="gray">#616161</color>
-    <color name="reactionBackground">#F0F0F0</color>
-    <color name="black">#000</color>
+    <!-- ইউটিউব ব্র্যান্ড কালারস - মূল লাল রং এবং এর ভ্যারিয়েশন -->
+    <color name="youtube_red">#FF0000</color>                    <!-- ইউটিউবের মূল লাল রং - লোগো, সাবস্ক্রাইব বাটন -->
+    <color name="youtube_red_dark">#CC0000</color>                <!-- গাঢ় লাল - বাটন প্রেস করার সময় -->
+    <color name="youtube_red_light">#FF3333</color>               <!-- হালকা লাল - হভার ইফেক্টের জন্য -->
+    
+    <!-- ম্যাটেরিয়াল ৩ প্রাইমারি কালারস - মূল রং সিস্টেম -->
+    <color name="md_theme_light_primary">#6750A4</color>          <!-- প্রাইমারি রং - মূল UI এলিমেন্টস -->
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>        <!-- প্রাইমারি রঙের উপর টেক্সট -->
+    <color name="md_theme_light_primaryContainer">#FFDDDD</color> <!-- প্রাইমারি কন্টেইনার - হালকা ব্যাকগ্রাউন্ড -->
+    <color name="md_theme_light_onPrimaryContainer">#410000</color> <!-- প্রাইমারি কন্টেইনারের উপর টেক্সট -->
+    
+    <!-- ম্যাটেরিয়াল ৩ সেকেন্ডারি কালারস - সাহায্যকারী রং সিস্টেম -->
+    <color name="md_theme_light_secondary">#775656</color>        <!-- সেকেন্ডারি রং - ছোট UI এলিমেন্টস -->
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>      <!-- সেকেন্ডারি রঙের উপর টেক্সট -->
+    <color name="md_theme_light_secondaryContainer">#FFDDDD</color> <!-- সেকেন্ডারি কন্টেইনার -->
+    <color name="md_theme_light_onSecondaryContainer">#2C1515</color> <!-- সেকেন্ডারি কন্টেইনারের উপর টেক্সট -->
+    
+    <!-- ম্যাটেরিয়াল ৩ টার্শিয়ারি কালারস - তৃতীয় রং সিস্টেম -->
+    <color name="md_theme_light_tertiary">#705C2E</color>         <!-- টার্শিয়ারি রং - এক্সেন্ট কালার -->
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>       <!-- টার্শিয়ারি রঙের উপর টেক্সট -->
+    <color name="md_theme_light_tertiaryContainer">#FCDFA7</color> <!-- টার্শিয়ারি কন্টেইনার -->
+    <color name="md_theme_light_onTertiaryContainer">#251A00</color> <!-- টার্শিয়ারি কন্টেইনারের উপর টেক্সট -->
+    
+    <!-- ম্যাটেরিয়াল ৩ এরর কালারস - ভুল বা ত্রুটি দেখানোর জন্য -->
+    <color name="md_theme_light_error">#BA1A1A</color>           <!-- এরর রং - ভুল মেসেজ, ডিলিট বাটন -->
+    <color name="md_theme_light_errorContainer">#FFDAD6</color>  <!-- এরর কন্টেইনার - এরর মেসেজের ব্যাকগ্রাউন্ড -->
+    <color name="md_theme_light_onError">#FFFFFF</color>         <!-- এরর রঙের উপর টেক্সট -->
+    <color name="md_theme_light_onErrorContainer">#410002</color> <!-- এরর কন্টেইনারের উপর টেক্সট -->
+    
+    <!-- ম্যাটেরিয়াল ৩ ব্যাকগ্রাউন্ড কালারস - স্ক্রিন ব্যাকগ্রাউন্ড -->
+    <color name="md_theme_light_background">#FFFBFF</color>      <!-- মূল স্ক্রিন ব্যাকগ্রাউন্ড -->
+    <color name="md_theme_light_onBackground">#1C1B1F</color>    <!-- ব্যাকগ্রাউন্ডের উপর টেক্সট -->
+    <color name="md_theme_light_surface">#FFFBFF</color>         <!-- সারফেস - কার্ড, বটম শিট -->
+    <color name="md_theme_light_onSurface">#1C1B1F</color>      <!-- সারফেসের উপর টেক্সট -->
+    
+    <!-- ম্যাটেরিয়াল ৩ সারফেস ভ্যারিয়েন্টস - বিভিন্ন সারফেস লেভেল -->
+    <color name="md_theme_light_surfaceVariant">#F4DDDD</color>  <!-- বিকল্প সারফেস - লিস্ট আইটেম -->
+    <color name="md_theme_light_onSurfaceVariant">#524343</color> <!-- সারফেস ভ্যারিয়েন্টের উপর টেক্সট -->
+    <color name="md_theme_light_surfaceTint">#FF0000</color>     <!-- সারফেস টিন্ট - ইলিভেশন দেখানোর জন্য -->
+    
+    <!-- ম্যাটেরিয়াল ৩ আউটলাইন কালারস - বর্ডার এবং ডিভাইডার -->
+    <color name="md_theme_light_outline">#857373</color>         <!-- আউটলাইন - ইনপুট ফিল্ড বর্ডার -->
+    <color name="md_theme_light_outlineVariant">#D7C1C1</color>  <!-- হালকা আউটলাইন - সাবটল ডিভাইডার -->
+    
+    <!-- ম্যাটেরিয়াল ৩ ইনভার্স কালারস - ডার্ক মোড প্রিভিউ -->
+    <color name="md_theme_light_inverseSurface">#313033</color>  <!-- ইনভার্স সারফেস - স্ন্যাকবার -->
+    <color name="md_theme_light_inverseOnSurface">#F4EFF4</color> <!-- ইনভার্স সারফেসের উপর টেক্সট -->
+    <color name="md_theme_light_inversePrimary">#FFB3B3</color>  <!-- ইনভার্স প্রাইমারি - ডার্ক থিমে প্রাইমারি -->
+    
+    <!-- ইউটিউব স্পেসিফিক UI কালারস - ইউটিউবের বিশেষ UI এলিমেন্টস -->
+    <color name="youtube_dark_overlay">#000000</color>          <!-- ভিডিও প্লেয়ার ওভারলে -->
+    <color name="youtube_dark_overlay_60">#99000000</color>     <!-- ৬০% স্বচ্ছতার কালো ওভারলে -->
+    <color name="youtube_dark_overlay_40">#66000000</color>     <!-- ৪০% স্বচ্ছতার কালো ওভারলে -->
+    <color name="youtube_dark_overlay_20">#33000000</color>     <!-- ২০% স্বচ্ছতার কালো ওভারলে -->
+    
+    <!-- ইউটিউব ইন্টারঅ্যাকশন কালারস - ইউজার অ্যাকশনের জন্য -->
+    <color name="youtube_like_green">#00D924</color>            <!-- লাইক বাটন - সবুজ রং -->
+    <color name="youtube_dislike_gray">#606060</color>          <!-- ডিসলাইক বাটন - ধূসর রং -->
+    <color name="youtube_subscribe_red">#FF0000</color>         <!-- সাবস্ক্রাইব বাটন - লাল রং -->
+    <color name="youtube_live_red">#FF0000</color>              <!-- লাইভ স্ট্রিম ইন্ডিকেটর -->
+    <color name="youtube_premium_blue">#0F7EE6</color>          <!-- ইউটিউব প্রিমিয়াম - নীল রং -->
+    
+    <!-- ইউটিউব টেক্সট কালারস - বিভিন্ন টেক্সট লেভেলের জন্য -->
+    <color name="youtube_text_primary">#0F0F0F</color>          <!-- প্রাইমারি টেক্সট - শিরোনাম, গুরুত্বপূর্ণ টেক্সট -->
+    <color name="youtube_text_secondary">#606060</color>        <!-- সেকেন্ডারি টেক্সট - বর্ণনা, তারিখ -->
+    <color name="youtube_text_tertiary">#909090</color>         <!-- টার্শিয়ারি টেক্সট - ক্যাপশন, হিন্ট -->
+    <color name="youtube_text_white">#FFFFFF</color>            <!-- সাদা টেক্সট - ডার্ক ব্যাকগ্রাউন্ডে -->
+    
+    <!-- ইউটিউব ব্যাকগ্রাউন্ড কালারস - বিভিন্ন ব্যাকগ্রাউন্ড লেভেল -->
+    <color name="youtube_bg_primary">#FFFFFF</color>            <!-- প্রাইমারি ব্যাকগ্রাউন্ড - মূল স্ক্রিন -->
+    <color name="youtube_bg_secondary">#F9F9F9</color>          <!-- সেকেন্ডারি ব্যাকগ্রাউন্ড - সাইডবার -->
+    <color name="youtube_bg_card">#FFFFFF</color>               <!-- কার্ড ব্যাকগ্রাউন্ড - ভিডিও কার্ড -->
+    <color name="youtube_bg_overlay">#000000</color>            <!-- ওভারলে ব্যাকগ্রাউন্ড - মোডাল, পপআপ -->
+    
+    <!-- ইউটিউব ডিভাইডার কালারস - বিভাজক রেখার জন্য -->
+    <color name="youtube_divider">#E5E5E5</color>               <!-- সাধারণ ডিভাইডার - লিস্ট আইটেম আলাদা করতে -->
+    <color name="youtube_divider_strong">#CCCCCC</color>        <!-- শক্তিশালী ডিভাইডার - সেকশন আলাদা করতে -->
+    
+    <!-- ইউটিউব স্ট্যাটাস কালারস - অবস্থা প্রদর্শনের জন্য -->
+    <color name="youtube_online_green">#00D924</color>          <!-- অনলাইন স্ট্যাটাস - সবুজ -->
+    <color name="youtube_offline_gray">#909090</color>          <!-- অফলাইন স্ট্যাটাস - ধূসর -->
+    <color name="youtube_warning_orange">#FF8C00</color>        <!-- সতর্কতা রং - কমলা -->
+    
+    
+    
+    
+    
+    <!-- Bottom Navigation -->
+     <color name="state_checked">@color/md_theme_light_primary</color>
+     <color name="state_unchecked">@color/md_theme_light_onSurfaceVariant</color>
 
 
-    <!-- Custom Colors -->
-    <color name="bottom_nav_background">#E3F2FD</color>
-    <color name="whatsapp_bubble_background">#F5F6F5</color>
 
-    <color name="colorPrimaryLight">#66558E</color>
 
+
+
+    <color name="defaultIconTint">#FFFFFF</color>
+    <color name="defaultDiffTint">#000000</color>
+
+
+    <!-- Material 3 UIUX -->
+    <color name="md_theme_primary">@color/md_theme_light_primary</color>
+    <color name="md_theme_background">@color/md_theme_light_background</color>
+    
 </resources>

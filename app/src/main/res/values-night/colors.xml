@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/values-night/colors.xml - রাতের থিম কালারস -->
+<resources>
+    <!-- ইউটিউব ব্র্যান্ড কালারস - রাতের থিমেও একই থাকে -->
+    <color name="youtube_red">#FF0000</color>                    <!-- ইউটিউবের মূল লাল রং - লোগো, সাবস্ক্রাইব বাটন -->
+    <color name="youtube_red_dark">#CC0000</color>                <!-- গাঢ় লাল - বাটন প্রেস করার সময় -->
+    <color name="youtube_red_light">#FF3333</color>               <!-- হালকা লাল - হভার ইফেক্টের জন্য -->
+    
+    <!-- ম্যাটেরিয়াল ৩ প্রাইমারি কালারস - ডার্ক মোডে উল্টো রং -->
+    <color name="md_theme_dark_primary">#6750A4</color>          <!-- প্রাইমারি রং - হালকা লাল, চোখের জন্য আরামদায়ক -->
+    <color name="md_theme_dark_onPrimary">#680000</color>        <!-- প্রাইমারি রঙের উপর টেক্সট - গাঢ় লাল -->
+    <color name="md_theme_dark_primaryContainer">#920000</color> <!-- প্রাইমারি কন্টেইনার - মাঝারি লাল -->
+    <color name="md_theme_dark_onPrimaryContainer">#FFDDDD</color> <!-- প্রাইমারি কন্টেইনারের উপর টেক্সট -->
+    
+    <!-- ম্যাটেরিয়াল ৩ সেকেন্ডারি কালারস - ডার্ক মোডে নরম রং -->
+    <color name="md_theme_dark_secondary">#E6BDBD</color>        <!-- সেকেন্ডারি রং - হালকা গোলাপি -->
+    <color name="md_theme_dark_onSecondary">#442929</color>      <!-- সেকেন্ডারি রঙের উপর টেক্সট -->
+    <color name="md_theme_dark_secondaryContainer">#5D3F3F</color> <!-- সেকেন্ডারি কন্টেইনার -->
+    <color name="md_theme_dark_onSecondaryContainer">#FFDDDD</color> <!-- সেকেন্ডারি কন্টেইনারের উপর টেক্সট -->
+    
+    <!-- ম্যাটেরিয়াল ৩ টার্শিয়ারি কালারস - ডার্ক মোডে উষ্ণ রং -->
+    <color name="md_theme_dark_tertiary">#DFC38C</color>         <!-- টার্শিয়ারি রং - উষ্ণ সোনালি -->
+    <color name="md_theme_dark_onTertiary">#3E2E04</color>       <!-- টার্শিয়ারি রঙের উপর টেক্সট -->
+    <color name="md_theme_dark_tertiaryContainer">#564419</color> <!-- টার্শিয়ারি কন্টেইনার -->
+    <color name="md_theme_dark_onTertiaryContainer">#FCDFA7</color> <!-- টার্শিয়ারি কন্টেইনারের উপর টেক্সট -->
+    
+    <!-- ম্যাটেরিয়াল ৩ এরর কালারস - ডার্ক মোডে নরম এরর রং -->
+    <color name="md_theme_dark_error">#FFB4AB</color>           <!-- এরর রং - হালকা লাল, চোখে কম কষ্টকর -->
+    <color name="md_theme_dark_errorContainer">#93000A</color>  <!-- এরর কন্টেইনার - গাঢ় লাল -->
+    <color name="md_theme_dark_onError">#690005</color>         <!-- এরর রঙের উপর টেক্সট -->
+    <color name="md_theme_dark_onErrorContainer">#FFDAD6</color> <!-- এরর কন্টেইনারের উপর টেক্সট -->
+    
+    <!-- ম্যাটেরিয়াল ৩ ব্যাকগ্রাউন্ড কালারস - ডার্ক ব্যাকগ্রাউন্ড -->
+    <color name="md_theme_dark_background">#0F0F0F</color>      <!-- মূল স্ক্রিন ব্যাকগ্রাউন্ড - গভীর কালো -->
+    <color name="md_theme_dark_onBackground">#E6E1E5</color>    <!-- ব্যাকগ্রাউন্ডের উপর টেক্সট - হালকা সাদা -->
+    <color name="md_theme_dark_surface">#0F0F0F</color>         <!-- সারফেস - কার্ড, বটম শিট -->
+    <color name="md_theme_dark_onSurface">#E6E1E5</color>      <!-- সারফেসের উপর টেক্সট -->
+    
+    <!-- ম্যাটেরিয়াল ৩ সারফেস ভ্যারিয়েন্টস - ডার্ক মোডে লেয়ার -->
+    <color name="md_theme_dark_surfaceVariant">#524343</color>  <!-- বিকল্প সারফেস - গাঢ় ধূসর -->
+    <color name="md_theme_dark_onSurfaceVariant">#D7C1C1</color> <!-- সারফেস ভ্যারিয়েন্টের উপর টেক্সট -->
+    <color name="md_theme_dark_surfaceTint">#FFB3B3</color>     <!-- সারফেস টিন্ট - হালকা লাল আভা -->
+    
+    <!-- ম্যাটেরিয়াল ৩ আউটলাইন কালারস - ডার্ক মোডে সাবটল বর্ডার -->
+    <color name="md_theme_dark_outline">#A08C8C</color>         <!-- আউটলাইন - নরম ধূসর বর্ডার -->
+    <color name="md_theme_dark_outlineVariant">#524343</color>  <!-- হালকা আউটলাইন - খুব সাবটল -->
+    
+    <!-- ম্যাটেরিয়াল ৩ ইনভার্স কালারস - লাইট মোড প্রিভিউ -->
+    <color name="md_theme_dark_inverseSurface">#E6E1E5</color>  <!-- ইনভার্স সারফেস - হালকা রং -->
+    <color name="md_theme_dark_inverseOnSurface">#313033</color> <!-- ইনভার্স সারফেসের উপর টেক্সট -->
+    <color name="md_theme_dark_inversePrimary">#FF0000</color>  <!-- ইনভার্স প্রাইমারি - লাইট থিমে প্রাইমারি -->
+    
+    <!-- ইউটিউব স্পেসিফিক UI কালারস - ডার্ক মোডেও একই -->
+    <color name="youtube_dark_overlay">#000000</color>          <!-- ভিডিও প্লেয়ার ওভারলে - সম্পূর্ণ কালো -->
+    <color name="youtube_dark_overlay_60">#99000000</color>     <!-- ৬০% স্বচ্ছতার কালো ওভারলে -->
+    <color name="youtube_dark_overlay_40">#66000000</color>     <!-- ৪০% স্বচ্ছতার কালো ওভারলে -->
+    <color name="youtube_dark_overlay_20">#33000000</color>     <!-- ২০% স্বচ্ছতার কালো ওভারলে -->
+    
+    <!-- ইউটিউব ইন্টারঅ্যাকশন কালারস - ডার্ক মোডে অভিযোজিত -->
+    <color name="youtube_like_green">#00D924</color>            <!-- লাইক বাটন - একই উজ্জ্বল সবুজ -->
+    <color name="youtube_dislike_gray">#AAAAAA</color>          <!-- ডিসলাইক বাটন - হালকা ধূসর -->
+    <color name="youtube_subscribe_red">#FF0000</color>         <!-- সাবস্ক্রাইব বাটন - একই লাল -->
+    <color name="youtube_live_red">#FF0000</color>              <!-- লাইভ স্ট্রিম ইন্ডিকেটর - একই লাল -->
+    <color name="youtube_premium_blue">#3EA6FF</color>          <!-- ইউটিউব প্রিমিয়াম - হালকা নীল -->
+    
+    <!-- ইউটিউব টেক্সট কালারস - ডার্ক মোডে উল্টো রং -->
+    <color name="youtube_text_primary">#FFFFFF</color>          <!-- প্রাইমারি টেক্সট - সাদা, শিরোনাম -->
+    <color name="youtube_text_secondary">#AAAAAA</color>        <!-- সেকেন্ডারি টেক্সট - হালকা ধূসর -->
+    <color name="youtube_text_tertiary">#717171</color>         <!-- টার্শিয়ারি টেক্সট - গাঢ় ধূসর -->
+    <color name="youtube_text_white">#FFFFFF</color>            <!-- সাদা টেক্সট - যেকোনো ব্যাকগ্রাউন্ডে -->
+    
+    <!-- ইউটিউব ব্যাকগ্রাউন্ড কালারস - ডার্ক মোডে গাঢ় রং -->
+    <color name="youtube_bg_primary">#0F0F0F</color>            <!-- প্রাইমারি ব্যাকগ্রাউন্ড - গভীর কালো -->
+    <color name="youtube_bg_secondary">#181818</color>          <!-- সেকেন্ডারি ব্যাকগ্রাউন্ড - হালকা কালো -->
+    <color name="youtube_bg_card">#212121</color>               <!-- কার্ড ব্যাকগ্রাউন্ড - কার্বন গ্রে -->
+    <color name="youtube_bg_overlay">#000000</color>            <!-- ওভারলে ব্যাকগ্রাউন্ড - সম্পূর্ণ কালো -->
+    
+    <!-- ইউটিউব ডিভাইডার কালারস - ডার্ক মোডে সাবটল -->
+    <color name="youtube_divider">#2A2A2A</color>               <!-- সাধারণ ডিভাইডার - গাঢ় ধূসর -->
+    <color name="youtube_divider_strong">#3A3A3A</color>        <!-- শক্তিশালী ডিভাইডার - একটু হালকা -->
+    
+    <!-- ইউটিউব স্ট্যাটাস কালারস - ডার্ক মোডে একই -->
+    <color name="youtube_online_green">#00D924</color>          <!-- অনলাইন স্ট্যাটাস - একই সবুজ -->
+    <color name="youtube_offline_gray">#717171</color>          <!-- অফলাইন স্ট্যাটাস - গাঢ় ধূসর -->
+    <color name="youtube_warning_orange">#FF8C00</color>        <!-- সতর্কতা রং - একই কমলা -->
+    
+    
+    
+    
+    <!-- Bottom Navigation -->
+     <color name="state_checked">@color/md_theme_dark_primary</color>
+     <color name="state_unchecked">@color/md_theme_dark_surfaceVariant</color>
+     
+     <color name="defaultDiffTint">#FFFFFF</color>
+     <color name="defaultIconTint">#FFFFFF</color>
+     
+     <!-- Material 3 UIUX -->
+    <color name="md_theme_primary">@color/md_theme_dark_primary</color>
+    <color name="md_theme_background">@color/md_theme_dark_background</color>
+</resources>
