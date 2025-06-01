@@ -24,7 +24,7 @@ public class SubscriptionsFragment extends Fragment {
             @Nullable final ViewGroup container,
             @Nullable final Bundle savedInstanceState) {
         // Layout inflate করে root view তৈরি করা হচ্ছে
-        final View view = inflater.inflate(R.layout.fragment_download, container, false);
+        final View view = inflater.inflate(R.layout.fragment_subscriptions, container, false);
 
         return view;
     }
