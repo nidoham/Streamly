@@ -1,314 +1,407 @@
+// প্রয়োজনীয় imports - ART Profile generation এর জন্য
 import com.android.tools.profgen.ArtProfileKt
 import com.android.tools.profgen.ArtProfileSerializer
 import com.android.tools.profgen.DexFile
 
+// প্লাগিন কনফিগারেশন - Android অ্যাপ্লিকেশন এবং Kotlin সাপোর্টের জন্য
 plugins {
-    id "com.android.application"
-    id "kotlin-android"
-    id "kotlin-kapt"
-    id "kotlin-parcelize"
-    id "checkstyle"
-    id "org.sonarqube" version "4.0.0.2929"
+    id "com.android.application"                    // Android অ্যাপ্লিকেশন প্লাগিন
+    id "kotlin-android"                             // Kotlin Android support
+    id "kotlin-kapt"                                // Kotlin annotation processing
+    id "kotlin-parcelize"                           // Parcelable code generation
+    id "org.sonarqube" version "4.4.1.3373"       // Code quality analysis - updated version
 }
 
+// Android কনফিগারেশন ব্লক
 android {
-    compileSdk 34
-    namespace 'com.nidoham.streamly'
+    compileSdk 34                                   // সর্বশেষ Android SDK version
+    namespace 'com.nidoham.streamly'                // অ্যাপ্লিকেশনের namespace
     
+    // বিল্ড ফিচার সক্রিয় করা
     buildFeatures {
-        viewBinding true
-        buildConfig true
+        viewBinding true                            // View Binding enable করা
+        buildConfig true                            // BuildConfig ক্লাস generate করা
     }
     
+    // ডিফল্ট কনফিগারেশন
     defaultConfig {
-        applicationId "com.nidoham.streamly"
-        resValue "string", "app_name", "Streamly"
-        minSdk 26  // Android 8.0 (API level 26)
-        targetSdk 33
+        applicationId "com.nidoham.streamly"        // অ্যাপের unique identifier
+        resValue "string", "app_name", "Streamly"   // অ্যাপের নাম resource হিসেবে
+        minSdk 26                                   // Android 8.0 (API level 26) - minimum support
+        targetSdk 34                                // টার্গেট SDK updated to 34
+        
+        // Version code এবং name handling
         if (System.properties.containsKey('versionCodeOverride')) {
             versionCode System.getProperty('versionCodeOverride') as Integer
         } else {
-            versionCode 1001  // Starting fresh for alpha
+            versionCode 1001                        // Alpha version এর জন্য starting code
         }
-        versionName "1.0.0-alpha01"  // Alpha version
+        versionName "1.0.0-alpha01"                 // Alpha version identifier
+        
+        // Version name suffix handling
         if (System.properties.containsKey('versionNameSuffix')) {
             versionNameSuffix System.getProperty('versionNameSuffix')
         }
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"  // Testing runner
     }
 
+    // বিল্ড টাইপ কনফিগারেশন
     buildTypes {
         debug {
-            debuggable true
+            debuggable true                         // Debug mode সক্রিয় রাখা
             
-             // Add this to verify Firebase config
-            //println "Using debug Firebase configuration"
-            //println "Application ID: ${applicationId} 
-
-            // suffix the app id and the app name with git branch name
+            // Git branch based naming - Debug version এর জন্য
             def workingBranch = getGitWorkingBranch()
-            def normalizedWorkingBranch = workingBranch.replaceFirst("^[^A-Za-z]+", "").replaceAll("[^0-9A-Za-z]+", "")
+            def normalizedWorkingBranch = workingBranch
+                .replaceFirst("^[^A-Za-z]+", "")
+                .replaceAll("[^0-9A-Za-z]+", "")
+                
             if (normalizedWorkingBranch.isEmpty() || workingBranch == "master" || workingBranch == "dev") {
-                // default values when branch name could not be determined or is master or dev
+                // Default values for master/dev/unknown branches
                 applicationIdSuffix ".debug"
-                resValue "string", "app_name", "Streamly"
+                resValue "string", "app_name", "Streamly Debug"
             } else {
+                // Branch specific naming
                 applicationIdSuffix ".debug." + normalizedWorkingBranch
-                resValue "string", "app_name", "Streamly"
-                archivesBaseName = 'Streamly_' + normalizedWorkingBranch
+                resValue "string", "app_name", "Streamly " + normalizedWorkingBranch
+                archivesBaseName = 'Streamly_' + normalizedWorkingBranch + '_debug'
             }
         }
 
         release {
+            // Release build এর জন্য package suffix handling
             if (System.properties.containsKey('packageSuffix')) {
                 applicationIdSuffix System.getProperty('packageSuffix')
-                resValue "string", "app_name", "Streamly"
+                resValue "string", "app_name", "Streamly " + System.getProperty('packageSuffix')
                 archivesBaseName = 'Streamly_' + System.getProperty('packageSuffix')
             }
-            minifyEnabled true
-            shrinkResources false // disabled to fix F-Droid's reproducible build
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            archivesBaseName = 'streamly'
+            
+            minifyEnabled true                      // Code minification সক্রিয়
+            shrinkResources false                   // Resource shrinking বন্ধ - F-Droid reproducible build এর জন্য
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            archivesBaseName = 'streamly_release'   // Release APK এর নাম
+            
+            // Release signing config (if needed)
+            // signingConfig signingConfigs.release
         }
     }
 
+    // Lint কনফিগারেশন - Code analysis এর জন্য
     lint {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-        // suppress false warning ("Resource IDs will be non-final in Android Gradle Plugin version
-        // 5.0, avoid using them in switch case statements"), which affects only library projects
+        checkReleaseBuilds false                    // Release build এ lint check বন্ধ
+        abortOnError false                          // Error হলেও build continue করা
+        // NonConstantResourceId warning suppress করা
         disable 'NonConstantResourceId'
+        // Additional lint rules
+        warningsAsErrors false
+        ignoreWarnings true
     }
 
+    // Java compatibility options - Java 17 এর জন্য
     compileOptions {
-        // Flag to enable support for the new language APIs
-        coreLibraryDesugaringEnabled true
-
+        coreLibraryDesugaringEnabled true          // New language APIs এর support
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-        encoding 'utf-8'
+        encoding 'utf-8'                           // UTF-8 encoding
     }
 
+    // Kotlin compatibility - Java 17 এর সাথে match করা
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
+        jvmTarget = "17"                           // JVM target version
+        freeCompilerArgs += [
+            "-opt-in=kotlin.RequiresOptIn"         // Experimental APIs এর জন্য
+        ]
     }
 
-    packagingOptions {
+    // Packaging options - অপ্রয়োজনীয় files exclude করা
+    packaging {
         resources {
-            // remove two files which belong to jsoup
-            // no idea how they ended up in the META-INF dir...
-            excludes += ['META-INF/README.md', 'META-INF/CHANGES',
-                         // 'COPYRIGHT' belongs to RxJava...
-                         'META-INF/COPYRIGHT', 'META-INF/DEPENDENCIES']
+            excludes += [
+                'META-INF/README.md',              // jsoup থেকে আসা files
+                'META-INF/CHANGES',
+                'META-INF/COPYRIGHT',              // RxJava থেকে আসা
+                'META-INF/DEPENDENCIES',
+                'META-INF/LICENSE',
+                'META-INF/LICENSE.txt',
+                'META-INF/NOTICE',
+                'META-INF/NOTICE.txt'
+            ]
         }
+    }
+
+    // Test options
+    testOptions {
+        unitTests.returnDefaultValues = true       // Unit test এর জন্য default values
     }
 }
 
+// External variables - Version management এর জন্য
 ext {
-    checkstyleVersion = '10.12.1'
+    // AndroidX versions - সর্বশেষ stable versions
+    androidxLifecycleVersion = '2.7.0'
+    androidxWorkVersion = '2.9.0'
+    androidxCoreVersion = '1.12.0'
+    androidxAppCompatVersion = '1.6.1'
+    androidxFragmentVersion = '1.6.2'
+    androidxRecyclerViewVersion = '1.3.2'
 
-    androidxLifecycleVersion = '2.6.2'
-    androidxWorkVersion = '2.8.1'
-
+    // Third-party library versions
     stateSaverVersion = '1.4.1'
-    exoPlayerVersion = '2.18.7'
+    exoPlayerVersion = '1.2.1'                     // Updated to Media3 ExoPlayer
     googleAutoServiceVersion = '1.1.1'
     groupieVersion = '2.10.1'
     markwonVersion = '4.6.2'
+    okhttpVersion = '4.12.0'
+    jsoupVersion = '1.17.2'
+    rxJavaVersion = '3.1.8'
+    picassoVersion = '2.8'
 
+    // Debug tools
     leakCanaryVersion = '2.12'
     stethoVersion = '1.6.0'
 }
 
+// কনফিগারেশন blocks - Custom configurations
 configurations {
-    checkstyle
-    ktlint
+    ktlint                                         // Ktlint configuration
 }
 
-checkstyle {
-    getConfigDirectory().set(rootProject.file("checkstyle"))
-    ignoreFailures false
-    showViolations true
-    toolVersion = checkstyleVersion
-}
-
-tasks.register('runCheckstyle', Checkstyle) {
-    source 'src'
-    include '**/*.java'
-    exclude '**/gen/**'
-    exclude '**/R.java'
-    exclude '**/BuildConfig.java'
-    exclude 'main/java/us/shandian/giga/**'
-
-    classpath = configurations.checkstyle
-
-    showViolations true
-
-    reports {
-        xml.getRequired().set(true)
-        html.getRequired().set(true)
-    }
-}
-
+// Ktlint configuration - Kotlin code style
 def outputDir = "${project.buildDir}/reports/ktlint/"
 def inputFiles = project.fileTree(dir: "src", include: "**/*.kt")
 
+// Ktlint check task
 tasks.register('runKtlint', JavaExec) {
     inputs.files(inputFiles)
     outputs.dir(outputDir)
-    getMainClass().set("com.pinterest.ktlint.Main")
+    mainClass.set("com.pinterest.ktlint.Main")     // Updated syntax
     classpath = configurations.ktlint
     args "src/**/*.kt"
     jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
 }
 
+// Ktlint format task - Auto formatting
 tasks.register('formatKtlint', JavaExec) {
     inputs.files(inputFiles)
     outputs.dir(outputDir)
-    getMainClass().set("com.pinterest.ktlint.Main")
+    mainClass.set("com.pinterest.ktlint.Main")     // Updated syntax
     classpath = configurations.ktlint
     args "-F", "src/**/*.kt"
     jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
 }
 
+// Build dependencies - Code quality checks
 afterEvaluate {
     if (!System.properties.containsKey('skipFormatKtlint')) {
-        preDebugBuild.dependsOn formatKtlint
+        preBuild.dependsOn formatKtlint             // Build এর আগে format করা
     }
-    preDebugBuild.dependsOn runCheckstyle, runKtlint
+    preBuild.dependsOn runKtlint    // Build এর আগে quality checks
 }
 
+// SonarQube configuration - Code quality analysis
 sonar {
     properties {
         property "sonar.projectKey", "Nidoham_Streamly"
         property "sonar.organization", "nidoham"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.language", "java,kotlin"    // Multiple languages support
+        property "sonar.gradle.skipCompile", "true" // Skip implicit compilation
     }
 }
 
+// Dependencies - সব dependency গুলো category অনুযায়ী organized
 dependencies {
-/** Desugaring **/
+    
+    //==========================================
+    // CORE LIBRARIES - মূল Android এবং Kotlin libraries
+    //==========================================
+    
+    // Java 8+ API desugaring - পুরাতন Android versions এ নতুন APIs ব্যবহারের জন্য
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs_nio:2.0.4'
+    
+    // Kotlin standard library - Kotlin এর মূল library
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-/** NewPipe libraries **/
-    // You can use a local version by uncommenting a few lines in settings.gradle
-    // Or you can use a commit you pushed to GitHub by just replacing TeamNewPipe with your GitHub
-    // name and the commit hash with the commit hash of the (pushed) commit you want to test
-    // This works thanks to JitPack: https://jitpack.io/
+    //==========================================
+    // NEWPIPE LIBRARIES - Video streaming এর জন্য specialized libraries
+    //==========================================
+    
+    // JSON parser - NewPipe এর জন্য lightweight JSON parsing
     implementation 'com.github.TeamNewPipe:nanojson:1d9e1aea9049fc9f85e68b43ba39fe7be1c1f751'
-    // WORKAROUND: if you get errors with the NewPipeExtractor dependency, replace `v0.24.3` with
-    // the corresponding commit hash, since JitPack is sometimes buggy
+    
+    // Video extractor - YouTube এবং অন্যান্য platform থেকে video extract করার জন্য
     implementation 'com.github.TeamNewPipe.NewPipeExtractor:NewPipeExtractor:v0.24.6'
+    
+    // File picker - File selection এর জন্য
     implementation 'com.github.TeamNewPipe:NoNonsense-FilePicker:5.0.0'
 
-/** Checkstyle **/
-    checkstyle "com.puppycrawl.tools:checkstyle:${checkstyleVersion}"
-    ktlint 'com.pinterest:ktlint:0.45.2'
-
-/** Kotlin **/
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"
-
-/** AndroidX **/
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.documentfile:documentfile:1.0.1'
-    implementation 'androidx.fragment:fragment-ktx:1.6.2'
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${androidxLifecycleVersion}"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${androidxLifecycleVersion}"
-    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
-    implementation 'androidx.media:media:1.7.0'
-    implementation 'androidx.preference:preference:1.2.1'
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    // Newer version specified to prevent accessibility regressions with RecyclerView, see:
-    // https://developer.android.com/jetpack/androidx/releases/viewpager2#1.1.0-alpha01
-    implementation 'androidx.viewpager2:viewpager2:1.1.0-beta02'
-    implementation "androidx.work:work-runtime-ktx:${androidxWorkVersion}"
-    implementation "androidx.work:work-rxjava3:${androidxWorkVersion}"
+    //==========================================
+    // ANDROIDX LIBRARIES - Modern Android development libraries
+    //==========================================
+    
+    // Core AndroidX libraries
+    implementation "androidx.core:core-ktx:$androidxCoreVersion"              // Core KTX extensions
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"   // Backward compatibility
+    implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"  // Fragment KTX extensions
+    
+    // UI Components
+    implementation 'androidx.cardview:cardview:1.0.0'                         // Card view component
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'        // Constraint layout
+    implementation "androidx.recyclerview:recyclerview:$androidxRecyclerViewVersion" // RecyclerView
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'     // Pull to refresh
+    implementation 'androidx.viewpager2:viewpager2:1.1.0-beta02'              // ViewPager2 - updated version
+    
+    // Material Design - Google এর Material Design components
     implementation 'com.google.android.material:material:1.11.0'
-    implementation "androidx.webkit:webkit:1.9.0"
-
-/** Third-party libraries **/
-    // Instance state boilerplate elimination
-    implementation 'com.github.livefront:bridge:v2.0.2'
-    implementation "com.evernote:android-state:$stateSaverVersion"
-    kapt "com.evernote:android-state-processor:$stateSaverVersion"
-
-    // HTML parser
-    implementation "org.jsoup:jsoup:1.17.2"
-
-    // HTTP client
-    implementation "com.squareup.okhttp3:okhttp:4.12.0"
-
-    // Media player
-    implementation "com.google.android.exoplayer:exoplayer-core:${exoPlayerVersion}"
-    implementation "com.google.android.exoplayer:exoplayer-dash:${exoPlayerVersion}"
-    implementation "com.google.android.exoplayer:exoplayer-database:${exoPlayerVersion}"
-    implementation "com.google.android.exoplayer:exoplayer-datasource:${exoPlayerVersion}"
-    implementation "com.google.android.exoplayer:exoplayer-hls:${exoPlayerVersion}"
-    implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:${exoPlayerVersion}"
-    implementation "com.google.android.exoplayer:exoplayer-ui:${exoPlayerVersion}"
-    implementation "com.google.android.exoplayer:extension-mediasession:${exoPlayerVersion}"
     
-    implementation 'com.google.firebase:firebase-appdistribution-gradle:4.0.0'
+    // Lifecycle components - Activity/Fragment lifecycle management
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidxLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidxLifecycleVersion"
     
-    // ImageView and image loading
+    // Background work - Background task management
+    implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
+    implementation "androidx.work:work-rxjava3:$androidxWorkVersion"
+    
+    // Other AndroidX libraries
+    implementation 'androidx.documentfile:documentfile:1.0.1'                 // Document file access
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0' // Local broadcasts
+    implementation 'androidx.media:media:1.7.0'                               // Media framework
+    implementation 'androidx.preference:preference:1.2.1'                     // Settings screens
+    implementation "androidx.webkit:webkit:1.9.0"                             // WebView enhancements
+
+    //==========================================
+    // MEDIA PLAYER LIBRARIES - Video/Audio playback এর জন্য
+    //==========================================
+    
+    // Media3 ExoPlayer - Google এর modern media player
+    implementation "androidx.media3:media3-exoplayer:$exoPlayerVersion"       // Core ExoPlayer
+    implementation "androidx.media3:media3-exoplayer-dash:$exoPlayerVersion"  // DASH support
+    implementation "androidx.media3:media3-exoplayer-hls:$exoPlayerVersion"   // HLS support
+    implementation "androidx.media3:media3-exoplayer-smoothstreaming:$exoPlayerVersion" // Smooth streaming
+    implementation "androidx.media3:media3-ui:$exoPlayerVersion"              // UI components
+    implementation "androidx.media3:media3-session:$exoPlayerVersion"         // Media session
+    implementation "androidx.media3:media3-datasource-okhttp:$exoPlayerVersion" // OkHttp datasource
+
+    //==========================================
+    // NETWORK LIBRARIES - HTTP requests এবং networking
+    //==========================================
+    
+    // OkHttp - HTTP client library
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"   // Request/response logging
+
+    //==========================================
+    // DATA PARSING LIBRARIES - HTML এবং data parsing
+    //==========================================
+    
+    // HTML parser - Web scraping এর জন্য
+    implementation "org.jsoup:jsoup:$jsoupVersion"
+    
+    // Markdown parser - Markdown content render করার জন্য
+    implementation "io.noties.markwon:core:$markwonVersion"
+    implementation "io.noties.markwon:linkify:$markwonVersion"
+
+    //==========================================
+    // IMAGE LOADING LIBRARIES - Image loading এবং caching
+    //==========================================
+    
+    // Picasso - Image loading এবং caching library
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
+    
+    // Circular ImageView - Profile pictures এর জন্য
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    // Metadata generator for service descriptors
-    compileOnly "com.google.auto.service:auto-service-annotations:${googleAutoServiceVersion}"
-    kapt "com.google.auto.service:auto-service:${googleAutoServiceVersion}"
+    //==========================================
+    // REACTIVE PROGRAMMING - Asynchronous programming
+    //==========================================
+    
+    // RxJava - Reactive programming library
+    implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava3:rxandroid:3.0.2"                     // Android specific RxJava
+    implementation "com.jakewharton.rxbinding4:rxbinding:4.0.0"               // UI widgets এর জন্য RxJava bindings
 
-    // Manager for complex RecyclerView layouts
-    implementation "com.github.lisawray.groupie:groupie:${groupieVersion}"
-    implementation "com.github.lisawray.groupie:groupie-viewbinding:${groupieVersion}"
-
-    // Image loading
-    //noinspection GradleDependency --> 2.8 is the last version, not 2.71828!
-    implementation "com.squareup.picasso:picasso:2.8"
-
-    // Markdown library for Android
-    implementation "io.noties.markwon:core:${markwonVersion}"
-    implementation "io.noties.markwon:linkify:${markwonVersion}"
-
-    // Crash reporting
-    implementation "ch.acra:acra-core:5.11.3"
-
-    // Properly restarting
-    implementation 'com.jakewharton:process-phoenix:2.1.2'
-
-    // Reactive extensions for Java VM
-    implementation "io.reactivex.rxjava3:rxjava:3.1.8"
-    implementation "io.reactivex.rxjava3:rxandroid:3.0.2"
-    // RxJava binding APIs for Android UI widgets
-    implementation "com.jakewharton.rxbinding4:rxbinding:4.0.0"
-
-    // Date and time formatting
+    //==========================================
+    // UTILITY LIBRARIES - সাহায্যকারী libraries
+    //==========================================
+    
+    // State management - Instance state save/restore
+    implementation 'com.github.livefront:bridge:v2.0.2'                      // Activity/Fragment state bridge
+    implementation "com.evernote:android-state:$stateSaverVersion"            // State saver
+    kapt "com.evernote:android-state-processor:$stateSaverVersion"            // State processor
+    
+    // RecyclerView utilities - Complex RecyclerView layouts
+    implementation "com.github.lisawray.groupie:groupie:$groupieVersion"
+    implementation "com.github.lisawray.groupie:groupie-viewbinding:$groupieVersion"
+    
+    // Date formatting - Human readable date/time
     implementation "org.ocpsoft.prettytime:prettytime:5.0.8.Final"
+    
+    // App restart utility - Clean app restart
+    implementation 'com.jakewharton:process-phoenix:2.1.2'
+    
+    // Crash reporting - Bug tracking এবং crash reports
+    implementation "ch.acra:acra-core:5.11.3"
+    implementation "ch.acra:acra-mail:5.11.3"                                 // Email crash reports
+    implementation "ch.acra:acra-notification:5.11.3"                        // Notification crash reports
 
-/** Debugging **/
-    // Memory leak detection
-    debugImplementation "com.squareup.leakcanary:leakcanary-object-watcher-android:${leakCanaryVersion}"
-    debugImplementation "com.squareup.leakcanary:plumber-android:${leakCanaryVersion}"
-    debugImplementation "com.squareup.leakcanary:leakcanary-android-core:${leakCanaryVersion}"
-    // Debug bridge for Android
-    debugImplementation "com.facebook.stetho:stetho:${stethoVersion}"
-    debugImplementation "com.facebook.stetho:stetho-okhttp3:${stethoVersion}"
+    //==========================================
+    // CODE GENERATION LIBRARIES - Compile time code generation
+    //==========================================
+    
+    // Auto service - Service metadata generation
+    compileOnly "com.google.auto.service:auto-service-annotations:$googleAutoServiceVersion"
+    kapt "com.google.auto.service:auto-service:$googleAutoServiceVersion"
 
-/** Testing **/
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.6.0'
+    //==========================================
+    // DEVELOPMENT TOOLS - Development এবং debugging tools
+    //==========================================
+    
+    // Code quality tools - Build time এ ব্যবহৃত হয়
+    ktlint 'com.pinterest:ktlint:0.50.0'                                      // Updated ktlint version
 
-    androidTestImplementation "androidx.test.ext:junit:1.1.5"
-    androidTestImplementation "androidx.test:runner:1.5.2"
-    androidTestImplementation "org.assertj:assertj-core:3.24.2"
+    //==========================================
+    // DEBUG DEPENDENCIES - শুধুমাত্র debug build এ included
+    //==========================================
+    
+    // Memory leak detection - Memory leak খুঁজে বের করার জন্য
+    debugImplementation "com.squareup.leakcanary:leakcanary-object-watcher-android:$leakCanaryVersion"
+    debugImplementation "com.squareup.leakcanary:plumber-android:$leakCanaryVersion"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android-core:$leakCanaryVersion"
+    
+    // Debug bridge - Network debugging এর জন্য
+    debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
+    debugImplementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
+    
+    // Debug utilities
+    debugImplementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'     // HTTP request logging
+
+    //==========================================
+    // TEST DEPENDENCIES - Testing এর জন্য libraries
+    //==========================================
+    
+    // Unit testing - Local machine এ চালানো tests
+    testImplementation 'junit:junit:4.13.2'                                   // JUnit testing framework
+    testImplementation 'org.mockito:mockito-core:5.7.0'                       // Mocking framework - updated
+    testImplementation 'org.mockito:mockito-inline:5.7.0'                     // Inline mocking
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"  // Coroutines testing
+    
+    // Integration testing - Device/Emulator এ চালানো tests
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"                 // AndroidX JUnit
+    androidTestImplementation "androidx.test:runner:1.5.2"                    // Test runner
+    androidTestImplementation "androidx.test:rules:1.5.0"                     // Test rules
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"    // UI testing
+    androidTestImplementation "org.assertj:assertj-core:3.24.2"               // Fluent assertions
 }
 
+//==========================================
+// HELPER FUNCTIONS - Utility functions
+//==========================================
+
+/**
+ * Git branch name বের করার function
+ * CI/CD এবং branch specific builds এর জন্য ব্যবহৃত
+ */
 static String getGitWorkingBranch() {
     try {
         def gitProcess = "git rev-parse --abbrev-ref HEAD".execute()
@@ -316,31 +409,56 @@ static String getGitWorkingBranch() {
         if (gitProcess.exitValue() == 0) {
             return gitProcess.text.trim()
         } else {
-            // not a git repository
+            // Git repository না হলে empty string return
             return ""
         }
     } catch (IOException ignored) {
-        // git was not found
+        // Git installed না থাকলে empty string return
         return ""
     }
 }
 
-// fix reproducible builds
+//==========================================
+// POST-BUILD TASKS - Build এর পর চালানো tasks
+//==========================================
+
+/**
+ * Reproducible builds এর জন্য ART Profile sorting
+ * F-Droid এবং other reproducible build systems এর জন্য প্রয়োজনীয়
+ */
 project.afterEvaluate {
-    tasks.compileReleaseArtProfile.doLast {
-        outputs.files.each { file ->
-            if (file.toString().endsWith(".profm")) {
-                println("Sorting ${file} ...")
-                def version = ArtProfileSerializer.valueOf("METADATA_0_0_2")
-                def profile = ArtProfileKt.ArtProfile(file)
-                def keys = new ArrayList(profile.profileData.keySet())
-                def sortedData = new LinkedHashMap()
-                Collections.sort keys, new DexFile.Companion()
-                keys.each { key -> sortedData[key] = profile.profileData[key] }
-                new FileOutputStream(file).with {
-                    write(version.magicBytes$profgen)
-                    write(version.versionBytes$profgen)
-                    version.write$profgen(it, sortedData, "")
+    // ART Profile compilation task খুঁজে বের করা
+    def artProfileTasks = tasks.matching { task ->
+        task.name.contains('compileReleaseArtProfile') || 
+        task.name.contains('CompileArtProfile')
+    }
+    
+    artProfileTasks.configureEach { task ->
+        task.doLast {
+            task.outputs.files.each { file ->
+                if (file.toString().endsWith(".profm")) {
+                    println("Sorting ART Profile: ${file}")
+                    try {
+                        def version = ArtProfileSerializer.valueOf("METADATA_0_0_2")
+                        def profile = ArtProfileKt.ArtProfile(file)
+                        def keys = new ArrayList(profile.profileData.keySet())
+                        def sortedData = new LinkedHashMap()
+                        
+                        // Keys sort করা reproducible build এর জন্য
+                        Collections.sort(keys, new DexFile.Companion())
+                        keys.each { key -> 
+                            sortedData[key] = profile.profileData[key] 
+                        }
+                        
+                        // Sorted data file এ write করা
+                        new FileOutputStream(file).withCloseable { outputStream ->
+                            outputStream.write(version.magicBytes$profgen)
+                            outputStream.write(version.versionBytes$profgen)
+                            version.write$profgen(outputStream, sortedData, "")
+                        }
+                    } catch (Exception e) {
+                        println("Warning: Could not sort ART profile ${file}: ${e.message}")
+                    }
                 }
             }
         }

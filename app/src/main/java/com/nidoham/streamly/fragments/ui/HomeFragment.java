@@ -11,10 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.androidide.streamly.utils.AndroidIDE;
 import com.nidoham.streamly.R;
 
+import com.nidoham.streamly.databinding.FragmentHomeBinding;
+import com.nidoham.streamly.databinding.ListItemVideoBinding;
+import com.nidoham.streamly.list.adapter.TrendingVideoAdapter;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
@@ -26,8 +29,11 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
+    private FragmentHomeBinding binding;
+
     private static final String TAG = "HomeFragment";
-    private RecyclerView trendingRecyclerView;
+    
+    private TrendingVideoAdapter adapter;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -39,11 +45,14 @@ public class HomeFragment extends Fragment {
             @NonNull final LayoutInflater inflater,
             @Nullable final ViewGroup container,
             @Nullable final Bundle savedInstanceState) {
-
-        final View view = inflater.inflate(R.layout.fragment_home, container, false);
-        trendingRecyclerView = view.findViewById(R.id.trending_recycler_view);
-        trendingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        return view;
+    
+        binding = FragmentHomeBinding.inflate(getLayoutInflater(), container, false);
+        
+        adapter = new TrendingVideoAdapter(getContext()); // অ্যাডাপ্টার তৈরি করুন
+        binding.trendingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.trendingRecyclerView.setAdapter(adapter); // RecyclerView তে অ্যাডাপ্টার সেট করুন
+        
+        return binding.getRoot();
     }
 
     @Override
@@ -66,11 +75,7 @@ public class HomeFragment extends Fragment {
                     Log.e(TAG, "NewPipe Downloader is not initialized!");
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() ->
-                                Toast.makeText(
-                                        getContext(),
-                                        "Extractor not initialized",
-                                        Toast.LENGTH_SHORT
-                                ).show()
+                              AndroidIDE.ShowMessages(getContext(), "NewPipe Downloader is not initialized!")
                         );
                     }
                     return;
@@ -115,19 +120,7 @@ public class HomeFragment extends Fragment {
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        if (finalItems != null && !finalItems.isEmpty()) {
-                            Toast.makeText(
-                                    getContext(),
-                                    "Loaded " + finalItems.size() + " videos",
-                                    Toast.LENGTH_SHORT
-                            ).show();
-                        } else {
-                            Toast.makeText(
-                                    getContext(),
-                                    "No trending videos found",
-                                    Toast.LENGTH_SHORT
-                            ).show();
-                        }
+                        adapter.setItems(finalItems); // অ্যাডাপ্টারে ডেটা সেট করুন
                     });
                 }
 

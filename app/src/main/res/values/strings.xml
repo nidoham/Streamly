@@ -968,4 +968,6 @@
     <string name="continue_as_guest">Continue as Guest</string>
     
     <string name="terms_and_privacy">By continuing, you agree to our Terms of Service and Privacy Policy</string>
+    
+    <string name="video_thumbnail_description">Video thumbnail</string>
 </resources>
