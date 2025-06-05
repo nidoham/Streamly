@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "910927370879",
+    "firebase_url": "https://streamly-b3932-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "streamly-b3932",
+    "storage_bucket": "streamly-b3932.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:910927370879:android:abb1b2ed605eb96b207d4a",
+        "android_client_info": {
+          "package_name": "com.nidoham.streamly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "910927370879-ra17v570vj5i5urg90tfs5rhmqd5240e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7Q9IQn7C31JAzGYlGSddniaP1DLfCV5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "910927370879-ra17v570vj5i5urg90tfs5rhmqd5240e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

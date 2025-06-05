@@ -10,6 +10,7 @@ plugins {
     id "kotlin-kapt"                                // Kotlin annotation processing
     id "kotlin-parcelize"                           // Parcelable code generation
     id "org.sonarqube" version "4.4.1.3373"       // Code quality analysis - updated version
+    id("com.google.gms.google-services")           // Firebase Backend server
 }
 
 // Android কনফিগারেশন ব্লক
@@ -59,11 +60,11 @@ android {
                 
             if (normalizedWorkingBranch.isEmpty() || workingBranch == "master" || workingBranch == "dev") {
                 // Default values for master/dev/unknown branches
-                applicationIdSuffix ".debug"
+               // applicationIdSuffix ".debug"
                 resValue "string", "app_name", "Streamly Debug"
             } else {
                 // Branch specific naming
-                applicationIdSuffix ".debug." + normalizedWorkingBranch
+                // applicationIdSuffix ".debug." + normalizedWorkingBranch
                 resValue "string", "app_name", "Streamly " + normalizedWorkingBranch
                 archivesBaseName = 'Streamly_' + normalizedWorkingBranch + '_debug'
             }
@@ -269,7 +270,24 @@ dependencies {
     implementation 'androidx.media:media:1.7.0'                               // Media framework
     implementation 'androidx.preference:preference:1.2.1'                     // Settings screens
     implementation "androidx.webkit:webkit:1.9.0"                             // WebView enhancements
+    
+    
+    
+    // Firebase Database
+    // Firebase BOM: Version control simplified
+    implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
 
+    // Firebase Analytics
+    implementation("com.google.firebase:firebase-analytics-ktx")
+
+    // Firebase Authentication
+    implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Firebase Realtime Database
+    implementation("com.google.firebase:firebase-database-ktx")
+
+    // Google Sign-In button support
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
     //==========================================
     // MEDIA PLAYER LIBRARIES - Video/Audio playback এর জন্য
     //==========================================

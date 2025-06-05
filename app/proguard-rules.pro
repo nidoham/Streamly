@@ -1,31 +1,37 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# ProGuard configuration for Rhino JavaScript engine and scripting APIs
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
+# Preserve classes in javax.script
+-keep class javax.script.** { *; }
+
+# Preserve all classes from org.mozilla.javascript (Rhino)
+-keep class org.mozilla.javascript.** { *; }
+
+# Optional: If using Nashorn (for Java 8 environments)
+-keep class jdk.nashorn.** { *; }
+
+# Optional: For dynamic linking support (Nashorn/Dynalink)
+-keep class jdk.dynalink.** { *; }
+
+# Optional: Internal JDK modules (use with caution – may not be necessary in Android)
+-keep class jdk.internal.** { *; }
+
+# Optional: JavaBeans classes, used in some scripting contexts
+-keep class java.beans.** { *; }
+
+# Preserve line number information for better stack traces
+-keepattributes SourceFile,LineNumberTable
+
+# Optional: Hide source file name (obfuscate)
+#-renamesourcefileattribute SourceFile
+
+# If you're using WebView with JavaScript interface
+#-keepclassmembers class your.package.name.YourWebViewJSInterface {
+#    public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
--keep class javax.script.** { *; }
--keep class org.mozilla.javascript.** { *; }
-
-# Keep rules for Rhino and scripting
--keep class javax.script.** { *; }
--keep class org.mozilla.javascript.** { *; }
--keep class jdk.nashorn.** { *; }
--keep class jdk.dynalink.** { *; }
--keep class jdk.internal.** { *; }
--keep class java.beans.** { *; }
+# Avoid obfuscating Rhino or scripting classes to prevent reflection issues
+-dontwarn org.mozilla.javascript.**
+-dontwarn javax.script.**
+-dontwarn jdk.nashorn.**
+-dontwarn jdk.dynalink.**
+-dontwarn java.beans.**
